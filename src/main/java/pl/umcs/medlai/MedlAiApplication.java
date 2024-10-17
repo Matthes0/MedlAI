@@ -8,6 +8,7 @@ public class MedlAiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MedlAiApplication.class, args);
+		//siema
 	}
 
 }
