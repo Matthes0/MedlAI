@@ -13,6 +13,6 @@ public class EmailController {
 
     @GetMapping("/send-email")
     public void sendEmail() {
-        emailService.sendEmail("mailjakis@gmail.com","testy w mainie", "umcs development");
+        emailService.sendEmail("matthes123321@gmail.com","testy systemu", "test test test");
     }
 }
