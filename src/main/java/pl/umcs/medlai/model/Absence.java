@@ -6,11 +6,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
 @Entity
-@Table(name="Appointment")
-public class Appointment {
+@Table(name="Absence")
+public class Absence {
     @Id
     @Setter
     @Getter
@@ -20,14 +18,14 @@ public class Appointment {
     private LocalDateTime start_date;
     @Setter
     @Getter
-    private LocalDateTime end_date = start_date.plusMinutes(30);
+    private LocalDateTime end_date;
+    @Setter
+    @Getter
+    @Enumerated(EnumType.STRING)
+    private AbsenceReason absence_reason;
     @ManyToOne
     @JoinColumn(name="doctor_id")
     @Setter
     @Getter
     private Doctor doctor;
-    @Setter
-    @Getter
-    @Enumerated(EnumType.STRING)
-    private Status status;
 }

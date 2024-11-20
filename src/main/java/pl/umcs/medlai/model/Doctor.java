@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "Doctor")
+@Table(name="Doctor")
 public class Doctor {
     @Id
     @Setter
@@ -31,6 +31,16 @@ public class Doctor {
     @Enumerated(EnumType.STRING)
     private Specialization specialization;
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter
+    @Getter
     private List<Appointment> appointments;
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter
+    @Getter
+    private List<Schedule> schedule;
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter
+    @Getter
+    private List<Absence> absence;
 
 }
