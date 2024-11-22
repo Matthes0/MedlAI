@@ -1,0 +1,3 @@
+[submodule "med-ai"]
+	path = med-ai
+	url = https://github.com/Osariusz/med-ai
