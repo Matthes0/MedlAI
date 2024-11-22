@@ -1,0 +1,111 @@
+openapi: 3.1.0
+info:
+  title: MedlAI
+  description: Endpoint Documentation
+  version: 1.0.0
+servers:
+  - url: 'https'
+paths:
+  /appointment/add:
+    get:
+      summary: "GET appointment/add"
+      operationId: "add"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+    post:
+      summary: "POST appointment/add"
+      operationId: "add"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /appointment/update/{id}:
+    get:
+      summary: "GET appointment/update/{id}"
+      operationId: "update"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+    post:
+      summary: "POST appointment/update/{id}"
+      operationId: "update"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /appointment/delete:
+    post:
+      summary: "POST appointment/delete"
+      operationId: "deleteAppointment"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /send-email:
+    get:
+      summary: "GET send-email"
+      operationId: "sendEmail"
+      responses:
+        "200":
+          description: "OK"
+  /home:
+    get:
+      summary: "GET home"
+      operationId: "home"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /:
+    get:
+      summary: "GET "
+      operationId: "home"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
