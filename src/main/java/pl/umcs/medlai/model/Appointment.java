@@ -1,6 +1,7 @@
 package pl.umcs.medlai.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,21 @@ public class Appointment {
     @Setter
     @Getter
     private LocalDateTime end_date = start_date.plusMinutes(30);
+    @Setter
+    @Getter
+    private String patient_first_name;
+    @Setter
+    @Getter
+    private String patient_last_name;
+    @Setter
+    @Getter
+    private String patient_email;
+    @Setter
+    @Getter
+    private String patient_phone;
+    @Setter
+    @Getter
+    private String patient_encrypted_pesel;
     @ManyToOne
     @JoinColumn(name="doctor_id")
     @Setter
