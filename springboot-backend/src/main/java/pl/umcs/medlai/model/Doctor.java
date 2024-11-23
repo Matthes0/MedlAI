@@ -11,9 +11,10 @@ import java.util.List;
 @Table(name="Doctor")
 public class Doctor {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Setter
     @Getter
-    private Long id;
+    private Integer id;
     @Setter
     @Getter
     private String first_name;

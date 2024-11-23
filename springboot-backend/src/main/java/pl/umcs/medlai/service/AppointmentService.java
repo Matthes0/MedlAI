@@ -19,7 +19,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public Optional<Appointment> getById(long id) {
+    public Optional<Appointment> getById(Integer id) {
         return this.appointmentDAO.getById(id);
     }
     @Transactional
@@ -31,7 +31,7 @@ public class AppointmentService {
         this.appointmentDAO.saveOrUpdate(appointment);
     }
     @Transactional
-    public void delete(long id){
+    public void delete(Integer id){
         appointmentDAO.delete(id);
     }
 }

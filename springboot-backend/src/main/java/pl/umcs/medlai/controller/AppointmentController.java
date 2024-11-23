@@ -11,7 +11,7 @@ import pl.umcs.medlai.service.AppointmentService;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(path = "/appointment")
+@RequestMapping(path = "/api/appointment")
 public class AppointmentController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class AppointmentController {
     }
     // later to change id to jwt
     @RequestMapping(path = "/update/{id}", method = RequestMethod.GET)
-    public String update(@PathVariable long id, Model model) {
+    public String update(@PathVariable Integer id, Model model) {
         Optional<Appointment> appointmentOpt = this.appointmentService.getById(id);
         if(appointmentOpt.isEmpty()) {
             return "redirect:/main";
@@ -39,13 +39,13 @@ public class AppointmentController {
         return "appointment-form";
     }
     @RequestMapping(path = "/update/{id}", method = RequestMethod.POST)
-    public String update(@PathVariable long id, @ModelAttribute Appointment appointment) {
+    public String update(@PathVariable Integer id, @ModelAttribute Appointment appointment) {
         //appointment.setId(id);
         this.appointmentService.saveOrUpdate(appointment);
         return "redirect:/main";
     }
     @RequestMapping(path = "/delete", method = RequestMethod.POST)
-    public String deleteAppointment(@RequestParam long id) {
+    public String deleteAppointment(@RequestParam Integer id) {
         appointmentService.delete(id);
         return "redirect:/main";
     }

@@ -10,9 +10,10 @@ import java.time.LocalDateTime;
 @Table(name="Absence")
 public class Absence {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Setter
     @Getter
-    private Long id;
+    private Integer id;
     @Setter
     @Getter
     private LocalDateTime start_date;

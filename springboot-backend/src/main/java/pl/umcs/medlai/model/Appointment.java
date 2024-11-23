@@ -13,15 +13,16 @@ import java.time.LocalDateTime;
 @Table(name="Appointment")
 public class Appointment {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Setter
     @Getter
-    private Long id;
+    private Integer id;
     @Setter
     @Getter
     private LocalDateTime start_date;
     @Setter
     @Getter
-    private LocalDateTime end_date = start_date.plusMinutes(30);
+    private LocalDateTime end_date;
     @Setter
     @Getter
     private String patient_first_name;

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -14,11 +13,13 @@ import java.time.LocalTime;
 @Table(name="Schedule")
 public class Schedule {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Setter
     @Getter
-    private Long id;
+    private Integer id;
     @Setter
     @Getter
+    @Enumerated(EnumType.STRING)
     private DayOfWeek day_of_week;
     @Setter
     @Getter

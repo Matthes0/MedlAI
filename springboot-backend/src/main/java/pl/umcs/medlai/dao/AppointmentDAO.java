@@ -20,7 +20,7 @@ public class AppointmentDAO {
     public AppointmentDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    public Optional<Appointment> getById(long id){
+    public Optional<Appointment> getById(Integer id){
         TypedQuery<Appointment> query = entityManager.createQuery(GET_BY_ID_JPQL,Appointment.class);
         query.setParameter("id", id);
         try {
@@ -41,7 +41,7 @@ public class AppointmentDAO {
             entityManager.merge(appointment);
         }
     }
-    public void delete(long id){
+    public void delete(Integer id){
         getById(id).ifPresent(appointment -> entityManager.remove(appointment));
     }
 }
