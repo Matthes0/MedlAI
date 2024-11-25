@@ -7,8 +7,7 @@ import BackButton from "../components/UI/BackButton.tsx";
 import { DoctorCard } from "../components/DoctorCard.tsx";
 import { TimeSlot } from "../components/TimeSlot.tsx";
 import { Stepper } from "../components/Stepper.tsx";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import {useMutation, useQuery} from "@tanstack/react-query";
 // Types
 export interface Doctor {
   id: number;
@@ -78,11 +77,17 @@ const CustomDateInput = React.forwardRef<
   </div>
 ));
 
+
 const AppointmentBooking: React.FC = () => {
   const [step, setStep] = useState(1);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['appointment'],
+    queryFn: () => fetch("http://localhost:8080/api/appointment/get"),
+  });
+
 
   const {
     register,
@@ -257,7 +262,6 @@ const AppointmentBooking: React.FC = () => {
         return null;
     }
   };
-
   return (
     <div className="min-h-screen w-full flex justify-center items-center bg-white p-4">
       <main className="flex flex-col justify-center items-center w-full max-w-5xl">
@@ -304,6 +308,6 @@ const AppointmentBooking: React.FC = () => {
       </main>
     </div>
   );
-};
+  };
 
 export default AppointmentBooking;

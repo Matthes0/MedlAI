@@ -5,9 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.umcs.medlai.dao.AppointmentDAO;
+import pl.umcs.medlai.dto.AppointmentDTO;
 import pl.umcs.medlai.model.Appointment;
 import pl.umcs.medlai.service.AppointmentService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -48,5 +50,11 @@ public class AppointmentController {
     public String deleteAppointment(@RequestParam Integer id) {
         appointmentService.delete(id);
         return "redirect:/main";
+    }
+    @GetMapping("/get")
+    public List<AppointmentDTO> getAvailableAppointments()
+    {
+        System.out.println(appointmentService.generateAvailableAppointments());
+        return appointmentService.generateAvailableAppointments();
     }
 }

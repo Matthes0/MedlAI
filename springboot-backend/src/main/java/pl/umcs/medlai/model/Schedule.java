@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -29,7 +30,7 @@ public class Schedule {
     private LocalTime end_time;
     @Setter
     @Getter
-    private LocalDateTime valid_to;
+    private LocalDate valid_to;
     @ManyToOne
     @JoinColumn(name="doctor_id")
     @Setter
