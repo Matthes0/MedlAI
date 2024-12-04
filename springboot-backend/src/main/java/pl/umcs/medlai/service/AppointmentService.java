@@ -9,6 +9,8 @@ import pl.umcs.medlai.dto.AppointmentDTO;
 import pl.umcs.medlai.model.Appointment;
 import pl.umcs.medlai.model.Doctor;
 import pl.umcs.medlai.model.Schedule;
+import pl.umcs.medlai.model.Status;
+import pl.umcs.medlai.repository.AppointmentRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +24,8 @@ import java.util.Optional;
 public class AppointmentService {
     @Autowired
     private AppointmentDAO appointmentDAO;
+    @Autowired
+    private AppointmentRepository appointmentRepository;
     @Autowired
     private DoctorDAO doctorDAO;
     public AppointmentService(AppointmentDAO appointmentDAO, DoctorDAO doctorDAO) {
@@ -79,4 +83,18 @@ public class AppointmentService {
         }
         return appointments;
     }
+
+    @Transactional
+    public Appointment updateAppointmentStatus(Integer appointmentId, Status newStatus) {
+        Optional<Appointment> optionalAppointment = appointmentRepository.findById(appointmentId);
+
+        if (optionalAppointment.isPresent()) {
+            Appointment appointment = optionalAppointment.get();
+            appointment.setStatus(newStatus);
+            return appointmentRepository.save(appointment);
+        } else {
+            throw new IllegalArgumentException("Appointment with ID " + appointmentId + " not found.");
+        }
+    }
+
 }
