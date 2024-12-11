@@ -34,7 +34,7 @@ public class Appointment {
     private String patient_email;
     @Setter
     @Getter
-    private String patient_phone;
+    private String patient_address;
     @Setter
     @Getter
     private String patient_encrypted_pesel;

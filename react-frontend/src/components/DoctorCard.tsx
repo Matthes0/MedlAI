@@ -1,5 +1,5 @@
 import { ChevronLeft } from "lucide-react";
-import { Doctor } from "../views/Assigment.tsx";
+import { Doctor } from "../views/Assignment.tsx";
 
 export const DoctorCard: React.FC<{
   doctor: Doctor;

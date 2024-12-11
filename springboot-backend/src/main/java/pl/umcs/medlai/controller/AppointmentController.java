@@ -12,7 +12,7 @@ import pl.umcs.medlai.service.AppointmentService;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping(path = "/api/appointment")
 public class AppointmentController {
 

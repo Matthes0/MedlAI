@@ -65,20 +65,19 @@ public class AppointmentService {
         List<AppointmentDTO> appointments = new ArrayList<>();
         LocalDate start_day = LocalDate.now();
         LocalDate valid_to = schedule.getValid_to();
+        Integer id = 1;
         for (LocalDate date = start_day; !date.isAfter(valid_to); date = date.plusDays(7)) {
                 LocalTime startTime = schedule.getStart_time();
                 LocalTime endTime = schedule.getEnd_time();
                 while (!(startTime.plusMinutes(30)).isAfter(endTime)) {
                     appointments.add(new AppointmentDTO(
+                            id,
                             doctor.getId(),
-                            doctor.getFirst_name(),
-                            doctor.getLast_name(),
-                            doctor.getSpecialization(),
                             startTime,
-                            startTime.plusMinutes(30),
                             date
                     ));
                     startTime = startTime.plusMinutes(30);
+                    id += 1;
                 }
         }
         return appointments;

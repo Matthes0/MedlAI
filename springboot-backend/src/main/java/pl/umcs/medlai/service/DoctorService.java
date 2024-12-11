@@ -1,15 +1,38 @@
 package pl.umcs.medlai.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pl.umcs.medlai.dao.AppointmentDAO;
+import pl.umcs.medlai.dao.DoctorDAO;
+import pl.umcs.medlai.dto.AppointmentDTO;
+import pl.umcs.medlai.dto.DoctorDTO;
+import pl.umcs.medlai.model.Appointment;
 import pl.umcs.medlai.model.Doctor;
+import pl.umcs.medlai.model.Schedule;
 import pl.umcs.medlai.model.Status;
 import pl.umcs.medlai.repository.DoctorRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+@Service
 public class DoctorService {
     private DoctorRepository doctorRepository;
+    @Autowired
+    private DoctorDAO doctorDAO;
+
+    @Transactional
+    public List<DoctorDTO> getAll() {
+        List<DoctorDTO> doctors_to_send = new ArrayList<>();
+        List<Doctor> doctors = doctorDAO.getAll();
+        for (Doctor doctor : doctors) {
+            doctors_to_send.add(new DoctorDTO(doctor.getId(), "Dr. "+doctor.getFirst_name()+" "+doctor.getLast_name(),doctor.getSpecialization()));
+        }
+        return doctors_to_send;
+    }
 
     @Transactional
     public void addDoctor(Doctor doctor) {

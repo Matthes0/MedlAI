@@ -1,11 +1,11 @@
 import { Clock } from "lucide-react";
-import { TimeSlotProps } from "../views/Assigment.tsx";
+import { TimeSlotProps } from "../views/Assignment.tsx";
 
 export const TimeSlot: React.FC<TimeSlotProps> = ({
-  time,
-  status,
-  roomNumber = "123",
-}) => {
+                                                      time,
+                                                      status,
+                                                      roomNumber = "123",
+                                                  }) => {
   const getStatusStyle = () => {
     switch (status) {
       case "available":

@@ -1,4 +1,4 @@
-export const CancelAssigment = () => {
+export const CancelAssignment = () => {
   return (
     <div className="h-screen w-screen flex justify-center items-center bg-white">
       <main className="flex flex-col justify-center items-center w-full">
