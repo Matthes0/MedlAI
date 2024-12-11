@@ -115,14 +115,22 @@ const AppointmentBooking: React.FC = () => {
       }
       return response.json();
     }, });
-  const queryAppointment = useQuery({ queryKey: ['appointment'], queryFn: async () => {
-      const response = await fetch("http://localhost:8080/api/appointment/get");
-      if (!response.ok) {
-        throw new Error("Failed to fetch appointments");
-      }
-      return response.json();
-    }, });
-
+  const queryAppointment = useQuery({
+      queryKey: ['appointment', selectedDoctor?.id, selectedDate],
+      queryFn: async () => {
+          if (!selectedDoctor || !selectedDate) return [];
+          const response = await fetch(`http://localhost:8080/api/appointment/get?doctorID=${selectedDoctor.id}&date=${selectedDate.toISOString()}`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch appointments");
+        }
+        return response.json();
+      },
+      enabled: selectedDoctor !== null && selectedDate !== null, // Only fetch if both doctor and date are selected
+  });
+  const filteredAppointments = queryAppointment.data?.filter((appointment) =>
+            appointment.doctorID === selectedDoctor?.id &&
+            appointment.date === selectedDate?.toISOString().slice(0, 10)
+    ) || [];
 
   //   const mutation = useMutation({
   //       mutationFn: (appointment: Appointment) =>
@@ -254,28 +262,15 @@ const AppointmentBooking: React.FC = () => {
                                                 month: "numeric",
                                             })}
                                         </h3>
-                                        {queryAppointment.map((timeslot) => (
-                                          <TimeSlot
-                                              id={timeslot.id}
-                                              key={timeslot.id}
-                                              time={timeslot.time}
-                                              status="available"
-                                              onClick={() => setSelectedTime(timeslot.time)}
-                                          />
+                                        {filteredAppointments.map((appointment) => (
+                                            <TimeSlot
+                                                key={appointment.id}
+                                                id={appointment.id}
+                                                time={appointment.startTime.toString()}
+                                                status="available"
+                                                onClick={() => setSelectedTime(appointment.startTime.toString())}
+                                            />
                                         ))}
-                                        {/*{TIMESLOTS.map((timeslot) => (*/}
-                                        {/*    <TimeSlot*/}
-                                        {/*        time={timeslot.time}*/}
-                                        {/*        status={timeslot.status}*/}
-                                        {/*        onClick={() => {*/}
-                                        {/*            setSelectedTime(timeslot.time);*/}
-                                        {/*            console.log(timeslot.time)*/}
-                                        {/*        }}*/}
-                                        {/*    />*/}
-                                        {/*))}*/}
-                                        {/*<TimeSlot time="8:00" status="selected"/>*/}
-                                        {/*<TimeSlot time="9:00" status="unavailable"/>*/}
-                                        {/*<TimeSlot time="10:00" status="available"/>*/}
                                     </div>
                                 )}
                             </div>

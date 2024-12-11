@@ -51,35 +51,62 @@ public class AppointmentService {
     }
 
     @Transactional
-    public List<AppointmentDTO> generateAvailableAppointments() {
+    public List<AppointmentDTO> generateAvailableAppointments(Integer doctorID, String date) {
         List<AppointmentDTO> appointments = new ArrayList<>();
-        List<Doctor> doctors = doctorDAO.getAll();
-        for (Doctor doctor : doctors) {
+        Optional<Doctor> doctorOptional = doctorDAO.getById(doctorID);
+        LocalDate receivedDate = LocalDate.parse(date.substring(0,10));
+        if (doctorOptional.isPresent()){
+            Doctor doctor = doctorOptional.get();
             for (Schedule schedule : doctor.getSchedule()) {
-                appointments.addAll(generateAppointmentsForSchedule(doctor, schedule));
+                if ((schedule.getDay_of_week().toString()).equals(receivedDate.getDayOfWeek().toString())){
+                    appointments.addAll(generateAppointmentsForSchedule(doctor, schedule, date));
+                }
             }
         }
+
+        //List<Doctor> doctors = doctorDAO.getAll();
+//        for (Doctor doctor : doctors) {
+//            for (Schedule schedule : doctor.getSchedule()) {
+//                appointments.addAll(generateAppointmentsForSchedule(doctor, schedule));
+//            }
+//        }
         return appointments;
     }
-    private List<AppointmentDTO> generateAppointmentsForSchedule(Doctor doctor, Schedule schedule) {
+    private List<AppointmentDTO> generateAppointmentsForSchedule(Doctor doctor, Schedule schedule, String dateRequest) {
+
+        LocalDate receivedDate = LocalDate.parse(dateRequest.substring(0,10));
         List<AppointmentDTO> appointments = new ArrayList<>();
-        LocalDate start_day = LocalDate.now();
-        LocalDate valid_to = schedule.getValid_to();
+//        LocalDate start_day = LocalDate.now();
+//        LocalDate valid_to = schedule.getValid_to();
         Integer id = 1;
-        for (LocalDate date = start_day; !date.isAfter(valid_to); date = date.plusDays(7)) {
-                LocalTime startTime = schedule.getStart_time();
-                LocalTime endTime = schedule.getEnd_time();
-                while (!(startTime.plusMinutes(30)).isAfter(endTime)) {
-                    appointments.add(new AppointmentDTO(
-                            id,
-                            doctor.getId(),
-                            startTime,
-                            date
-                    ));
-                    startTime = startTime.plusMinutes(30);
-                    id += 1;
-                }
+        LocalTime startTime = schedule.getStart_time();
+        LocalTime endTime = schedule.getEnd_time();
+        while (!(startTime.plusMinutes(30)).isAfter(endTime)) {
+            appointments.add(new AppointmentDTO(
+                    id,
+                    doctor.getId(),
+                    startTime,
+                    receivedDate
+            ));
+            startTime = startTime.plusMinutes(30);
+            id += 1;
         }
+
+
+//        for (LocalDate date = receivedDate; !date.isAfter(valid_to); date = date.plusDays(7)) {
+//                LocalTime startTime = schedule.getStart_time();
+//                LocalTime endTime = schedule.getEnd_time();
+//                while (!(startTime.plusMinutes(30)).isAfter(endTime)) {
+//                    appointments.add(new AppointmentDTO(
+//                            id,
+//                            doctor.getId(),
+//                            startTime,
+//                            date
+//                    ));
+//                    startTime = startTime.plusMinutes(30);
+//                    id += 1;
+//                }
+//        }
         return appointments;
     }
 

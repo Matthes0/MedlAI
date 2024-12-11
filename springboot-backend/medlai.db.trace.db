@@ -521,3 +521,7 @@ SCHEDULE [42001-224]
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "[*]SCHEDULE"; oczekiwano "SAVEPOINT, SCRIPT, SHUTDOWN"
 Syntax error in SQL statement "[*]SCHEDULE"; expected "SAVEPOINT, SCRIPT, SHUTDOWN"; SQL statement:
 SCHEDULE [42001-224]
+2024-12-11 21:15:33.941385+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "[*]SCHEDULE"; oczekiwano "SAVEPOINT, SCRIPT, SHUTDOWN"
+Syntax error in SQL statement "[*]SCHEDULE"; expected "SAVEPOINT, SCRIPT, SHUTDOWN"; SQL statement:
+SCHEDULE [42001-224]

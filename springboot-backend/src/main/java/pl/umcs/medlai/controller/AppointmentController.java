@@ -52,9 +52,9 @@ public class AppointmentController {
         return "redirect:/main";
     }
     @GetMapping("/get")
-    public List<AppointmentDTO> getAvailableAppointments()
+    public List<AppointmentDTO> getAvailableAppointments(@RequestParam("doctorID") Integer id, @RequestParam("date") String date)
     {
-        System.out.println(appointmentService.generateAvailableAppointments());
-        return appointmentService.generateAvailableAppointments();
+        //System.out.println(appointmentService.generateAvailableAppointments(id, date));
+        return appointmentService.generateAvailableAppointments(id, date);
     }
 }
