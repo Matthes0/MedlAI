@@ -54,7 +54,7 @@ public class AppointmentController {
     @GetMapping("/get")
     public List<AppointmentDTO> getAvailableAppointments(@RequestParam("doctorID") Integer id, @RequestParam("date") String date)
     {
-        //System.out.println(appointmentService.generateAvailableAppointments(id, date));
+        System.out.println(date);
         return appointmentService.generateAvailableAppointments(id, date);
     }
 }

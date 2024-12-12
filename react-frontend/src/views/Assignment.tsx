@@ -119,7 +119,7 @@ const AppointmentBooking: React.FC = () => {
       queryKey: ['appointment', selectedDoctor?.id, selectedDate],
       queryFn: async () => {
           if (!selectedDoctor || !selectedDate) return [];
-          const response = await fetch(`http://localhost:8080/api/appointment/get?doctorID=${selectedDoctor.id}&date=${selectedDate.toISOString()}`);
+          const response = await fetch(`http://localhost:8080/api/appointment/get?doctorID=${selectedDoctor.id}&date=${selectedDate.toLocaleDateString()}`);
         if (!response.ok) {
             throw new Error("Failed to fetch appointments");
         }
@@ -162,11 +162,6 @@ const AppointmentBooking: React.FC = () => {
         reValidateMode: "onChange",
     });
 
-    // const TIMESLOTS: TimeSlotProps[] = [
-    //     {time: "8:00", status: "available", roomNumber: "123"},
-    //     {time: "9:00", status: "available", roomNumber: "123"},
-    //     {time: "10:00", status: "available", roomNumber: "123"},
-    // ]
     const STEPS = ["Lekarz i Termin", "Dane osobowe", "Potwierdzenie"];
 
     const handleNextStep = useCallback(() => {
