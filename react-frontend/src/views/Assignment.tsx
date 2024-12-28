@@ -128,8 +128,7 @@ const AppointmentBooking: React.FC = () => {
       enabled: selectedDoctor !== null && selectedDate !== null, // Only fetch if both doctor and date are selected
   });
   const filteredAppointments = queryAppointment.data?.filter((appointment) =>
-            appointment.doctorID === selectedDoctor?.id &&
-            appointment.date === selectedDate?.toISOString().slice(0, 10)
+            appointment.doctorID === selectedDoctor?.id
     ) || [];
 
   //   const mutation = useMutation({

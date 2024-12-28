@@ -15,6 +15,7 @@ import pl.umcs.medlai.repository.AppointmentRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,12 +55,19 @@ public class AppointmentService {
     public List<AppointmentDTO> generateAvailableAppointments(Integer doctorID, String date) {
         List<AppointmentDTO> appointments = new ArrayList<>();
         Optional<Doctor> doctorOptional = doctorDAO.getById(doctorID);
-        LocalDate receivedDate = LocalDate.parse(date.substring(0,10));
+        DateTimeFormatter formatter;
+        if (date.length() == 9){
+            formatter = DateTimeFormatter.ofPattern("d.MM.yyyy");
+        } else{
+            formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        }
+        LocalDate receivedDate = LocalDate.parse(date, formatter);
+        System.out.println(receivedDate);
         if (doctorOptional.isPresent()){
             Doctor doctor = doctorOptional.get();
             for (Schedule schedule : doctor.getSchedule()) {
                 if ((schedule.getDay_of_week().toString()).equals(receivedDate.getDayOfWeek().toString())){
-                    appointments.addAll(generateAppointmentsForSchedule(doctor, schedule, date));
+                    appointments.addAll(generateAppointmentsForSchedule(doctor, schedule, receivedDate));
                 }
             }
         }
@@ -72,9 +80,9 @@ public class AppointmentService {
 //        }
         return appointments;
     }
-    private List<AppointmentDTO> generateAppointmentsForSchedule(Doctor doctor, Schedule schedule, String dateRequest) {
+    private List<AppointmentDTO> generateAppointmentsForSchedule(Doctor doctor, Schedule schedule, LocalDate date) {
 
-        LocalDate receivedDate = LocalDate.parse(dateRequest.substring(0,10));
+        //LocalDate receivedDate = LocalDate.parse(dateRequest.substring(0,10));
         List<AppointmentDTO> appointments = new ArrayList<>();
 //        LocalDate start_day = LocalDate.now();
 //        LocalDate valid_to = schedule.getValid_to();
@@ -86,7 +94,7 @@ public class AppointmentService {
                     id,
                     doctor.getId(),
                     startTime,
-                    receivedDate
+                    date
             ));
             startTime = startTime.plusMinutes(30);
             id += 1;
