@@ -1,12 +1,26 @@
 import { Clock } from "lucide-react";
-import { TimeSlotProps } from "../views/Assignment.tsx";
+
+export interface TimeSlotProps {
+  id: number;
+  time: string;
+  status: "available" | "selected" | "unavailable";
+  isSelected?: boolean;
+  roomNumber?: string;
+  onClick?: () => void;
+}
 
 export const TimeSlot: React.FC<TimeSlotProps> = ({
-                                                      time,
-                                                      status,
-                                                      roomNumber = "123",
-                                                  }) => {
+  time,
+  status,
+  roomNumber = "123",
+  isSelected,
+  onClick,
+}) => {
   const getStatusStyle = () => {
+    if (isSelected) {
+      return "bg-green-500 hover:bg-green-600 text-white";
+    }
+
     switch (status) {
       case "available":
         return "bg-blue-500 hover:bg-blue-600 text-white";
@@ -33,10 +47,11 @@ export const TimeSlot: React.FC<TimeSlotProps> = ({
         <button
           className={`px-4 py-2 rounded-md transition-colors ${getStatusStyle()}`}
           disabled={status === "unavailable"}
+          onClick={onClick}
         >
           {status === "unavailable"
             ? "Niedostępna"
-            : status === "selected"
+            : isSelected
             ? "Wybrano"
             : "Wybierz"}
         </button>
