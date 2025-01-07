@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,10 +17,10 @@ public class Absence {
     private Integer id;
     @Setter
     @Getter
-    private LocalDateTime start_date;
+    private LocalDate start_date;
     @Setter
     @Getter
-    private LocalDateTime end_date;
+    private LocalDate end_date;
     @Setter
     @Getter
     @Enumerated(EnumType.STRING)

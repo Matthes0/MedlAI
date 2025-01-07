@@ -5,14 +5,12 @@ export interface TimeSlotProps {
   time: string;
   status: "available" | "selected" | "unavailable";
   isSelected?: boolean;
-  roomNumber?: string;
   onClick?: () => void;
 }
 
 export const TimeSlot: React.FC<TimeSlotProps> = ({
   time,
   status,
-  roomNumber = "123",
   isSelected,
   onClick,
 }) => {
@@ -35,9 +33,6 @@ export const TimeSlot: React.FC<TimeSlotProps> = ({
 
   return (
     <div className="mb-4 bg-white rounded-lg shadow-sm p-4 min-w-[400px]">
-      <div className="flex items-center text-sm text-gray-500 mb-2">
-        <span>Gabinet: {roomNumber}</span>
-      </div>
       <div className="flex justify-between items-center text-gray-500">
         <div className="flex justify-center items-center">
           <Clock className="w-4 h-4 m-0" />

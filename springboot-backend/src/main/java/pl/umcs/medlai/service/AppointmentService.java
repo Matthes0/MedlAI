@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.umcs.medlai.dao.AppointmentDAO;
 import pl.umcs.medlai.dao.DoctorDAO;
 import pl.umcs.medlai.dto.AppointmentDTO;
-import pl.umcs.medlai.model.Appointment;
-import pl.umcs.medlai.model.Doctor;
-import pl.umcs.medlai.model.Schedule;
-import pl.umcs.medlai.model.Status;
+import pl.umcs.medlai.model.*;
 import pl.umcs.medlai.repository.AppointmentRepository;
 
 import java.time.LocalDate;
@@ -65,62 +62,46 @@ public class AppointmentService {
         System.out.println(receivedDate);
         if (doctorOptional.isPresent()){
             Doctor doctor = doctorOptional.get();
-            for (Schedule schedule : doctor.getSchedule()) {
-                if ((schedule.getDay_of_week().toString()).equals(receivedDate.getDayOfWeek().toString())){
+            List<Schedule> scheduleList = doctor.getSchedule();
+            List<Absence> absenceList = doctor.getAbsence();
+            for (Absence absence : absenceList){
+                if (!(receivedDate.isBefore(absence.getStart_date()) || receivedDate.isAfter(absence.getEnd_date()))){
+                    return appointments;
+                }
+            }
+            for (Schedule schedule : scheduleList) {
+                if ((schedule.getDay_of_week().toString()).equals(receivedDate.getDayOfWeek().toString()) && !(receivedDate.isAfter(schedule.getValid_to()))){
                     appointments.addAll(generateAppointmentsForSchedule(doctor, schedule, receivedDate));
                 }
             }
         }
-
-        //List<Doctor> doctors = doctorDAO.getAll();
-//        for (Doctor doctor : doctors) {
-//            for (Schedule schedule : doctor.getSchedule()) {
-//                appointments.addAll(generateAppointmentsForSchedule(doctor, schedule));
-//            }
-//        }
         return appointments;
     }
     private List<AppointmentDTO> generateAppointmentsForSchedule(Doctor doctor, Schedule schedule, LocalDate date) {
 
-        //LocalDate receivedDate = LocalDate.parse(dateRequest.substring(0,10));
         List<AppointmentDTO> appointments = new ArrayList<>();
-//        LocalDate start_day = LocalDate.now();
-//        LocalDate valid_to = schedule.getValid_to();
         Integer id = 1;
         LocalTime startTime = schedule.getStart_time();
         LocalTime endTime = schedule.getEnd_time();
         while (!(startTime.plusMinutes(30)).isAfter(endTime)) {
-            appointments.add(new AppointmentDTO(
-                    id,
-                    doctor.getId(),
-                    startTime,
-                    date
-            ));
+            if (this.appointmentDAO.getByDate(date.atTime(startTime)).isEmpty()) {
+                appointments.add(new AppointmentDTO(
+                        id,
+                        doctor.getId(),
+                        startTime,
+                        date
+                ));
+                id += 1;
+            }
             startTime = startTime.plusMinutes(30);
-            id += 1;
         }
 
-
-//        for (LocalDate date = receivedDate; !date.isAfter(valid_to); date = date.plusDays(7)) {
-//                LocalTime startTime = schedule.getStart_time();
-//                LocalTime endTime = schedule.getEnd_time();
-//                while (!(startTime.plusMinutes(30)).isAfter(endTime)) {
-//                    appointments.add(new AppointmentDTO(
-//                            id,
-//                            doctor.getId(),
-//                            startTime,
-//                            date
-//                    ));
-//                    startTime = startTime.plusMinutes(30);
-//                    id += 1;
-//                }
-//        }
         return appointments;
     }
 
     @Transactional
     public Appointment updateAppointmentStatus(Integer appointmentId, Status newStatus) {
-        Optional<Appointment> optionalAppointment = appointmentRepository.findById(appointmentId);
+        Optional<Appointment> optionalAppointment = getById(appointmentId);
 
         if (optionalAppointment.isPresent()) {
             Appointment appointment = optionalAppointment.get();

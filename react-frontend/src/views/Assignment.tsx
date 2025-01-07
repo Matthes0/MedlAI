@@ -20,7 +20,6 @@ export interface TimeSlotProps {
   id: number;
   time: string;
   status: "available" | "selected" | "unavailable";
-  roomNumber?: string;
   onClick?: () => void;
 }
 
@@ -35,14 +34,14 @@ interface PersonalDataForm {
 
 interface Appointment {
   doctor_id: number;
-  date: string;
-  time: string;
+  start_date: string;
   patient_first_name: string;
   patient_last_name: string;
   patient_email: string;
   patient_phone: string;
   patient_pesel: string;
   patient_address: string;
+  status: string
 }
 
 // Validation constants
@@ -101,7 +100,7 @@ const CustomDateInput = React.forwardRef<
 ));
 
 const AppointmentBooking: React.FC = () => {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -141,26 +140,36 @@ const AppointmentBooking: React.FC = () => {
   const handleTimeSelection = (time: string) => {
     setSelectedTime(selectedTime === time ? null : time);
   };
+  function convertDateFormat(dateString) {
+    // Split the input string by "."
+    const [day, month, year] = dateString.split('.');
 
-  //   const mutation = useMutation({
-  //       mutationFn: (appointment: Appointment) =>
-  //           fetch("http://localhost:8080/api/appointment/add", {
-  //               method: "POST",
-  //               body: JSON.stringify(appointment),
-  //           }).then((res) => {
-  //               if (!res.ok) {
-  //                   throw new Error("Failed to create appointment");
-  //               }
-  //               return res.json();
-  //           }),
-  //       onSuccess: () => {
-  //           alert("Wizyta została umówiona!");
-  //           queryClient.invalidateQueries(["appointment"]);
-  //       },
-  //       onError: (error) => {
-  //           alert(`Wystąpił błąd: ${error.message}`);
-  //       },
-  //   });
+    // Return the formatted date in "yyyy-mm-dd" format
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+
+    const mutation = useMutation({
+        mutationFn: (appointment: Appointment) =>
+            fetch("http://localhost:8080/api/appointment/add", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json", // Set the correct Content-Type
+                },
+              body: JSON.stringify(appointment),
+            }).then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to create appointment");
+                }
+                return res.json();
+            }),
+        onSuccess: () => {
+            alert("Wizyta została umówiona!");
+            queryClient.invalidateQueries(["appointment"]);
+        },
+        onError: (error) => {
+            alert(`Wystąpił błąd: ${error.message}`);
+        },
+    });
 
   const {
     register,
@@ -174,6 +183,9 @@ const AppointmentBooking: React.FC = () => {
   const STEPS = ["Lekarz i Termin", "Dane osobowe", "Potwierdzenie"];
 
   const handleNextStep = useCallback(() => {
+    console.log(selectedDate?.toString());
+    console.log(selectedTime?.toString());
+
     if (step < 3) {
       const canProceed =
         (step === 1 && selectedDoctor && selectedDate && selectedTime) ||
@@ -183,7 +195,7 @@ const AppointmentBooking: React.FC = () => {
         setStep((prevStep) => prevStep + 1);
       }
     }
-  }, [step, selectedDoctor, selectedDate, isValid]);
+  }, [step, selectedDoctor, selectedDate, selectedTime, isValid]);
 
   const handlePreviousStep = useCallback(() => {
     if (step > 1) {
@@ -195,24 +207,26 @@ const AppointmentBooking: React.FC = () => {
     console.log("Form submitted:", data);
     handleNextStep();
   };
-  const submitAppointment: SubmitHandler<PersonalDataForm> = (data) => {
-    console.log({ selectedDoctor, selectedDate, selectedTime });
+  const submitAppointment = handleSubmit((data) => {
     if (selectedDoctor && selectedDate && selectedTime) {
       const appointment: Appointment = {
         doctor_id: selectedDoctor.id,
-        date: selectedDate.toISOString(),
-        time: selectedTime,
+        start_date: convertDateFormat(selectedDate.toLocaleDateString())+"T"+selectedTime.toString(),
         patient_first_name: data.firstName,
         patient_last_name: data.lastName,
         patient_email: data.email,
         patient_phone: data.phone,
         patient_pesel: data.pesel,
         patient_address: data.address,
+        status: "TO_BE_CONFIRMED",
       };
-      console.log(appointment);
-      //   mutation.mutate(appointment);
+
+      console.log("Appointment data:", appointment);
+      mutation.mutate(appointment);
+    } else {
+      alert("Please complete all fields before confirming.");
     }
-  };
+  });
 
   const renderStep = () => {
     switch (step) {

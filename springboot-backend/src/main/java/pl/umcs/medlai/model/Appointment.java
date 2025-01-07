@@ -20,9 +20,9 @@ public class Appointment {
     @Setter
     @Getter
     private LocalDateTime start_date;
-    @Setter
-    @Getter
-    private LocalDateTime end_date;
+//    @Setter
+//    @Getter
+//    private LocalDateTime end_date;
     @Setter
     @Getter
     private String patient_first_name;
@@ -34,10 +34,13 @@ public class Appointment {
     private String patient_email;
     @Setter
     @Getter
+    private String patient_phone;
+    @Setter
+    @Getter
     private String patient_address;
     @Setter
     @Getter
-    private String patient_encrypted_pesel;
+    private String patient_pesel;
     @ManyToOne
     @JoinColumn(name="doctor_id")
     @Setter

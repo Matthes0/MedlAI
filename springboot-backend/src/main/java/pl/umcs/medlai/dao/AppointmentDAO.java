@@ -8,6 +8,8 @@ import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import pl.umcs.medlai.model.Appointment;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,12 +19,23 @@ public class AppointmentDAO {
     private EntityManager entityManager;
     private final String GET_ALL_JPQL = "FROM pl.umcs.medlai.model.Appointment";
     private final String GET_BY_ID_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.id = :id";
+    private final String GET_BY_DATE_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.start_date = :start_date";
+
     public AppointmentDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
     public Optional<Appointment> getById(Integer id){
         TypedQuery<Appointment> query = entityManager.createQuery(GET_BY_ID_JPQL,Appointment.class);
         query.setParameter("id", id);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+    public Optional<Appointment> getByDate(LocalDateTime date){
+        TypedQuery<Appointment> query = entityManager.createQuery(GET_BY_DATE_JPQL,Appointment.class);
+        query.setParameter("start_date", date);
         try {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
