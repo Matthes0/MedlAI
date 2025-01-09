@@ -1,8 +1,11 @@
 package pl.umcs.medlai.configure;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
@@ -11,8 +14,12 @@ import java.util.Map;
 @Component
 public class JWTUtil {
 
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final Key key;
 
+    @Autowired
+    public JWTUtil(@Value("${JWT_KEY}") String secret) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
     public String generateToken(Map<String, Object> claims, long expirationInMillis) {
         return Jwts.builder()
                 .setClaims(claims)

@@ -12,7 +12,7 @@ const App = () => {
         <Route path="/ai" element={<AIModule />} />
         <Route path="/book" element={<AppointmentBooking />} />
         <Route path="/manage" element={<CancelAssignment />} />
-        <Route path="/appointment" element={<ConfirmAssignment />} />
+        <Route path="/appointment/confirm" element={<ConfirmAssignment />} />
       </Routes>
     </BrowserRouter>
   );
