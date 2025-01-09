@@ -5,17 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.umcs.medlai.dao.AppointmentDAO;
 import pl.umcs.medlai.dao.DoctorDAO;
+import pl.umcs.medlai.dto.AppointmentBookedDTO;
 import pl.umcs.medlai.dto.AppointmentDTO;
 import pl.umcs.medlai.model.*;
 import pl.umcs.medlai.repository.AppointmentRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -77,10 +76,11 @@ public class AppointmentService {
         }
         return appointments;
     }
-    private List<AppointmentDTO> generateAppointmentsForSchedule(Doctor doctor, Schedule schedule, LocalDate date) {
+    @Transactional
+    public List<AppointmentDTO> generateAppointmentsForSchedule(Doctor doctor, Schedule schedule, LocalDate date) {
 
         List<AppointmentDTO> appointments = new ArrayList<>();
-        Integer id = 1;
+        int id = 1;
         LocalTime startTime = schedule.getStart_time();
         LocalTime endTime = schedule.getEnd_time();
         while (!(startTime.plusMinutes(30)).isAfter(endTime)) {
@@ -98,7 +98,21 @@ public class AppointmentService {
 
         return appointments;
     }
-
+    @Transactional
+    public Appointment createAppointmentFromBookedDTO(AppointmentBookedDTO appointmentDTO) {
+        Appointment appointment = new Appointment();
+        Optional<Doctor> doctor = this.doctorDAO.getById(appointmentDTO.getDoctor_id());
+        doctor.ifPresent(appointment::setDoctor);
+        appointment.setStart_date(appointmentDTO.getStart_date());
+        appointment.setPatient_first_name(appointmentDTO.getPatient_first_name());
+        appointment.setPatient_last_name(appointmentDTO.getPatient_last_name());
+        appointment.setPatient_email(appointmentDTO.getPatient_email());
+        appointment.setPatient_phone(appointmentDTO.getPatient_phone());
+        appointment.setPatient_address(appointmentDTO.getPatient_address());
+        appointment.setPatient_pesel(appointmentDTO.getPatient_pesel());
+        appointment.setStatus(appointmentDTO.getStatus());
+        return appointment;
+    }
     @Transactional
     public Appointment updateAppointmentStatus(Integer appointmentId, Status newStatus) {
         Optional<Appointment> optionalAppointment = getById(appointmentId);

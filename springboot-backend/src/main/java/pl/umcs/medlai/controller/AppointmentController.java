@@ -1,19 +1,12 @@
 package pl.umcs.medlai.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.umcs.medlai.dao.AppointmentDAO;
-import pl.umcs.medlai.dao.DoctorDAO;
 import pl.umcs.medlai.dto.AppointmentBookedDTO;
 import pl.umcs.medlai.dto.AppointmentConfirmationDTO;
 import pl.umcs.medlai.dto.AppointmentDTO;
 import pl.umcs.medlai.model.Appointment;
 import pl.umcs.medlai.service.AppointmentService;
-import pl.umcs.medlai.service.DoctorService;
 import pl.umcs.medlai.service.EmailService;
 import pl.umcs.medlai.model.Status;
 
@@ -28,23 +21,12 @@ public class AppointmentController {
     private AppointmentService appointmentService;
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private DoctorDAO doctorDAO;
 
     @ResponseBody
     @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = "application/json")
     public AppointmentBookedDTO add(@RequestBody AppointmentBookedDTO appointmentDTO) {
         //dodać check czy lekarz ma danego dnia o danej godzinie już jakiś appointment
-        Appointment appointment = new Appointment();
-        appointment.setDoctor((this.doctorDAO.getById(appointmentDTO.getDoctor_id())).get());
-        appointment.setStart_date(appointmentDTO.getStart_date());
-        appointment.setPatient_first_name(appointmentDTO.getPatient_first_name());
-        appointment.setPatient_last_name(appointmentDTO.getPatient_last_name());
-        appointment.setPatient_email(appointmentDTO.getPatient_email());
-        appointment.setPatient_phone(appointmentDTO.getPatient_phone());
-        appointment.setPatient_address(appointmentDTO.getPatient_address());
-        appointment.setPatient_pesel(appointmentDTO.getPatient_pesel());
-        appointment.setStatus(appointmentDTO.getStatus());
+        Appointment appointment = appointmentService.createAppointmentFromBookedDTO(appointmentDTO);
         this.appointmentService.saveOrUpdate(appointment);
         //this.emailService.sendEmail(appointment.getPatient_email(), "Potwierdź wizytę w przychodni MedlAI", "Potwierdź wizytę \n to link: " + this.emailService.generateAppointmentLink(appointment) + "\n Miłej wizyty, MedlAI team");
         System.out.println(this.emailService.generateAppointmentLink(appointment));
