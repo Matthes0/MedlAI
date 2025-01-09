@@ -34,6 +34,7 @@ public class AppointmentController {
     @ResponseBody
     @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = "application/json")
     public AppointmentBookedDTO add(@RequestBody AppointmentBookedDTO appointmentDTO) {
+        //dodać check czy lekarz ma danego dnia o danej godzinie już jakiś appointment
         Appointment appointment = new Appointment();
         appointment.setDoctor((this.doctorDAO.getById(appointmentDTO.getDoctor_id())).get());
         appointment.setStart_date(appointmentDTO.getStart_date());
@@ -45,7 +46,7 @@ public class AppointmentController {
         appointment.setPatient_pesel(appointmentDTO.getPatient_pesel());
         appointment.setStatus(appointmentDTO.getStatus());
         this.appointmentService.saveOrUpdate(appointment);
-        //this.emailService.sendEmail(appointment.getPatient_email(), "Potwierdź wizytę w przychodni MedlAI", "Potwierdź mail pls <br> to link: " + this.emailService.generateAppointmentLink(appointment) + "<br> Miłej wizyty, MedlAI team");
+        //this.emailService.sendEmail(appointment.getPatient_email(), "Potwierdź wizytę w przychodni MedlAI", "Potwierdź wizytę \n to link: " + this.emailService.generateAppointmentLink(appointment) + "\n Miłej wizyty, MedlAI team");
         System.out.println(this.emailService.generateAppointmentLink(appointment));
         return appointmentDTO;
     }
