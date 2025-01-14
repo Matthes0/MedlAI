@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+
 
 @Configuration
 public class SecurityConfig {
@@ -21,6 +23,9 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/public/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("h2-console").permitAll()
+                        .requestMatchers(toH2Console()).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -42,6 +47,7 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout.permitAll());
+        http.headers().frameOptions().disable();
 
         return http.build();
     }
