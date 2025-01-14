@@ -57,10 +57,10 @@ public class AdminController {
         appointmentService.updateAppointmentStatus(appointmentId, newStatus);
         return ResponseEntity.ok("Appointment status updated to " + newStatus);
     }
-//    @DeleteMapping("/appointments/{id}")
-//    public ResponseEntity<String> cancelAppointment(@PathVariable Long id) {
-//        appointmentService.cancelAppointment(id);
-//        return ResponseEntity.ok("Appointment canceled successfully.");
-//    }
+    @DeleteMapping("/appointments/{id}")
+    public ResponseEntity<String> cancelAppointment(@PathVariable int id) {
+        appointmentService.delete(id);
+        return ResponseEntity.ok("Appointment canceled successfully.");
+    }
 
 }
