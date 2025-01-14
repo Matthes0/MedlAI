@@ -4,6 +4,7 @@ import { AIModule } from "./views/AIModule.tsx";
 import AppointmentBooking from "./views/Assignment.tsx";
 import { CancelAssignment } from "./views/CancelAssignment.tsx";
 import { Admin } from "./views/Admin.tsx";
+import { LoginForm } from "./views/LoginForm.tsx";
 
 import {ConfirmAssignment} from "./views/ConfirmAssignment.tsx";
 const App = () => {
@@ -16,6 +17,8 @@ const App = () => {
         <Route path="/manage" element={<CancelAssignment />} />
         <Route path="/appointment/confirm" element={<ConfirmAssignment />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/login" element={<LoginForm />} />
+
       </Routes>
     </BrowserRouter>
   );
