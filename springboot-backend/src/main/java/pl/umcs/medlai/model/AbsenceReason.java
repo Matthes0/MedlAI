@@ -5,5 +5,4 @@ public enum AbsenceReason {
     L4,
     Childcare,
     Other,
-
 }
