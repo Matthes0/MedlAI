@@ -18,6 +18,12 @@ export const Landing = () => {
               <Button variant="secondary" onClick={() => navigate("/book")}>
                 Umów wizytę
               </Button>
+              <Button variant="secondary" onClick={() => navigate("/admin")}>
+                Admin panel
+              </Button>
+              <Button variant="secondary" onClick={() => navigate("/login")}>
+                Zaloguj się
+              </Button>
             </div>
             <div className="flex-col justify-end items-end hidden md:block">
               <div className="flex justify-end self-end bg-header-doc bg-[length:700px_505px] bg-center bg-no-repeat h-[500px] w-[900px]" />
