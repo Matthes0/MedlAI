@@ -3,41 +3,47 @@ import React, {useState} from "react";
 import { useNavigate } from 'react-router-dom'
 
 interface Credentials {
-    username: string,
+    user: string,
     password: string,
 }
 export const LoginForm = () => {
     const navigate = useNavigate()
     const queryClient = useQueryClient();
-    const [username, setUsername] = useState("");
+    const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const mutation = useMutation({
         mutationFn: (credentials: Credentials) =>
-            fetch("http://localhost:8080/api/admin/login", {
+            fetch("http://localhost:8080/login", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json", // Set the correct Content-Type
+                    "Content-Type": "application/x-www-form-urlencoded", // Zmień na wymagany format
                 },
-                body: JSON.stringify(credentials),
-            }).then((res) => {
+                credentials: "include",
+                body: new URLSearchParams({
+                    username: credentials.user,
+                    password: credentials.password,
+                }).toString(),
+            }).then(async (res) => {
                 if (!res.ok) {
-                    throw new Error("Failed to send credentials");
+                    const errorData = await res.json();
+                    throw new Error(errorData.error || "Failed to send credentials");
                 }
                 return res.json();
             }),
         onSuccess: () => {
             alert("Zalogowano!");
             queryClient.invalidateQueries(["credentials"]);
-            navigate("/admin")
+            navigate("/admin");
         },
         onError: (error) => {
             alert(`Wystąpił błąd: ${error.message}`);
         },
     });
-    const handlelogin = () => {
-        if (username != "" && password != "") {
-            console.log("credentials: ", username, " ", password);
-            const credentials: Credentials = {username: username, password: password}
+    const handleLogin = (event: React.FormEvent) => {
+        event.preventDefault(); // Prevent form from submitting
+        if (user !== "" && password !== "") {
+            console.log("credentials: ", user, " ", password);
+            const credentials: Credentials = { user, password };
             mutation.mutate(credentials);
         } else {
             alert("Empty data forms");
@@ -45,10 +51,22 @@ export const LoginForm = () => {
     };
 
     return (
-        <form>
-                <input type="text" name="username" onChange={(e) => setUsername(e.target.value)}/>
-                <input type="password" name="password" onChange={(e) => setPassword(e.target.value)}/>
-                <button type="submit" onSubmit={handlelogin}> Zaloguj się</button>
+        <form onSubmit={handleLogin}>
+            <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
+            />
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+            <button type="submit">Zaloguj się</button>
         </form>
 );
 };

@@ -1,5 +1,6 @@
 package pl.umcs.medlai.configure;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,18 +18,56 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth ->
-                auth.requestMatchers("/admin/**").authenticated().anyRequest().permitAll())
-                .csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                .formLogin(form -> form.loginPage("/login")
-                        .defaultSuccessUrl("/admin",true)
-                        .successHandler(new CustomLoginSuccessHandler()).permitAll()).logout(LogoutConfigurer::permitAll);
+        http.csrf().disable()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login", "/public/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginProcessingUrl("/login")
+                        .successHandler((request, response, authentication) -> {
+                            addCorsHeaders(response); // Dodaj nagłówki CORS
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"message\": \"Login successful\"}");
+                            response.getWriter().flush();
+                        })
+                        .failureHandler((request, response, exception) -> {
+                            addCorsHeaders(response); // Dodaj nagłówki CORS
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Invalid credentials\"}");
+                            response.getWriter().flush();
+                        })
+                        .permitAll()
+                )
+                .logout(logout -> logout.permitAll());
+
         return http.build();
     }
-
+    private void addCorsHeaders(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        return new InMemoryUserDetailsManager(
+                User.builder()
+                        .username("admin") // Zmień na swoje dane
+                        .password(passwordEncoder().encode("admin")) // Hasło musi być zakodowane
+                        .roles("ADMIN")
+                        .build(),
+                User.builder()
+                        .username("user")
+                        .password(passwordEncoder().encode("user"))
+                        .roles("USER")
+                        .build()
+        );
+    }
 }
+
