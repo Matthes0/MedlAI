@@ -19,4 +19,5 @@ public class AppointmentConfirmationDTO {
     private String patient_phone;
     private String patient_pesel;
     private String patient_address;
+    private Status status;
 }

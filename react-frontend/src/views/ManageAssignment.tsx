@@ -1,6 +1,8 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useNavigate} from "react-router-dom";
 
-export const ConfirmAssignment = () => {
+export const ManageAssignment = () => {
+    const navigate = useNavigate()
     const queryClient = useQueryClient();
     const token = new URLSearchParams(window.location.search).get("token");
     const queryAppointment = useQuery({
@@ -14,7 +16,7 @@ export const ConfirmAssignment = () => {
         },
     });
 
-    const mutation = useMutation({
+    const mutationConfirm = useMutation({
         mutationFn: (token: string) =>
             fetch("http://localhost:8080/api/appointment/confirm", {
                 method: "POST",
@@ -31,19 +33,53 @@ export const ConfirmAssignment = () => {
         onSuccess: () => {
             alert("Wizyta została potwierdzona!");
             queryClient.invalidateQueries(["appointment"]);
+            navigate("/");
         },
         onError: (error) => {
             alert(`Wystąpił błąd: ${error.message}`);
         },
     });
-    const confirmAppointment = () => {
+
+    const mutationCancel = useMutation({
+        mutationFn: (token: string) =>
+            fetch("http://localhost:8080/api/appointment/cancel", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // Set the correct Content-Type
+                },
+                body: JSON.stringify(token),
+            }).then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to cancel appointment");
+                }
+                return res.json();
+            }),
+        onSuccess: () => {
+            alert("Wizyta została anulowana!");
+            queryClient.invalidateQueries(["appointment"]);
+            navigate("/");
+
+        },
+        onError: (error) => {
+            alert(`Wystąpił błąd: ${error.message}`);
+        },
+    });
+    const handleConfirm = () => {
         if (token) {
-            console.log("Appointment token:", token);
-            mutation.mutate(token);
+            mutationConfirm.mutate(token);
         } else {
             alert("Invalid token");
         }
     };
+
+    const handleCancel = () => {
+        if (token) {
+            mutationCancel.mutate(token);
+        } else {
+            alert("Invalid token");
+        }
+    };
+
     if (queryAppointment.isLoading) {
         return <div>Loading appointment details...</div>;
     }
@@ -86,12 +122,22 @@ export const ConfirmAssignment = () => {
                             </div>
                         </div>
                         <div className="flex space-x-6 mt-5">
-                            <button
-                                className="px-6 py-2 bg-red-500 text-white rounded-md transition-all hover:bg-red-600"
-                                onClick={confirmAppointment}
-                            >
-                                Potwierdź wizytę
-                            </button>
+                            {appointmentData.status === "TO_BE_CONFIRMED" && (
+                                <button
+                                    className="px-6 py-2 bg-green-500 text-white rounded-md transition-all hover:bg-green-600"
+                                    onClick={handleConfirm}
+                                >
+                                    Potwierdź wizytę
+                                </button>
+                            )}
+                            {appointmentData.status === "SCHEDULED" && (
+                                <button
+                                    className="px-6 py-2 bg-red-500 text-white rounded-md transition-all hover:bg-red-600"
+                                    onClick={handleCancel}
+                                >
+                                    Anuluj wizytę
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

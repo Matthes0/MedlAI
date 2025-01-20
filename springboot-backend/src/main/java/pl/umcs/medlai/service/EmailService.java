@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 public class EmailService {
 
-    private static final long EXPIRATION_TIME = 3600000; // 60 minutes in milliseconds
+    //private static final long EXPIRATION_TIME = 3600000; // 60 minutes in milliseconds
 
     @Autowired
     private JavaMailSender mailSender;
@@ -33,8 +33,8 @@ public class EmailService {
                 "appointmentId", appointment.getId(),
                 "patientEmail", appointment.getPatient_email()
         );
-        String token = jwt.generateToken(claims, EXPIRATION_TIME);
-        return "http://localhost:5173/appointment/confirm?token=" + token;
+        String token = jwt.generateToken(claims);
+        return "http://localhost:5173/manage?token=" + token;
     }
 
     public Integer validateAppointmentLink(String token) {

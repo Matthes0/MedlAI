@@ -8,6 +8,7 @@ import { DoctorCard } from "../components/DoctorCard.tsx";
 import { TimeSlot } from "../components/TimeSlot.tsx";
 import { Stepper } from "../components/Stepper.tsx";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {useNavigate} from "react-router-dom";
 
 // Types
 export interface Doctor {
@@ -100,11 +101,13 @@ const CustomDateInput = React.forwardRef<
 ));
 
 const AppointmentBooking: React.FC = () => {
+  const navigate = useNavigate()
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [personalData, setPersonalData] = useState<PersonalDataForm | null>(null);
   // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const queryDoctor = useQuery({
     queryKey: ["doctor"],
@@ -163,8 +166,9 @@ const AppointmentBooking: React.FC = () => {
                 return res.json();
             }),
         onSuccess: () => {
-            alert("Wizyta została umówiona!");
+            alert("Wizyta została umówiona! Potwierdź ją teraz mailowo.");
             queryClient.invalidateQueries(["appointment"]);
+            navigate("/");
         },
         onError: (error) => {
             alert(`Wystąpił błąd: ${error.message}`);
@@ -185,17 +189,22 @@ const AppointmentBooking: React.FC = () => {
   const handleNextStep = useCallback(() => {
     console.log(selectedDate?.toString());
     console.log(selectedTime?.toString());
-
     if (step < 3) {
       const canProceed =
         (step === 1 && selectedDoctor && selectedDate && selectedTime) ||
         (step === 2 && isValid);
-
       if (canProceed) {
+        if (step === 2) {
+          // Save personal data without submitting
+          handleSubmit((data) => {
+            setPersonalData(data);
+            console.log("Personal data saved:", data);
+          })();
+        }
         setStep((prevStep) => prevStep + 1);
       }
     }
-  }, [step, selectedDoctor, selectedDate, selectedTime, isValid]);
+  }, [step, selectedDoctor, selectedDate, handleSubmit, selectedTime, isValid]);
 
   const handlePreviousStep = useCallback(() => {
     if (step > 1) {
@@ -363,8 +372,22 @@ const AppointmentBooking: React.FC = () => {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
-                  })}
+                  })}{" "}
+                  o godzinie {selectedTime}
                 </p>
+              </div>
+              <div>
+                <h3 className="font-medium">Dane pacjenta</h3>
+                {personalData && (
+                    <p>
+                      Imię: {personalData.firstName} <br />
+                      Nazwisko: {personalData.lastName} <br />
+                      Email: {personalData.email} <br />
+                      Telefon: {personalData.phone} <br />
+                      PESEL: {personalData.pesel} <br />
+                      Adres: {personalData.address}
+                    </p>
+                )}
               </div>
             </div>
           </div>
@@ -375,12 +398,12 @@ const AppointmentBooking: React.FC = () => {
     }
   };
   return (
-    <div className="min-h-screen w-full flex justify-center items-center bg-white p-4">
-      <main className="flex flex-col justify-center items-center w-full max-w-5xl">
-        <div className="flex w-full bg-[#F0EFFF] shadow-md rounded-md p-4 md:p-10">
-          <div className="rounded-lg p-4 md:p-6 w-full max-h-fit">
-            <BackButton />
-            <Stepper steps={STEPS} step={step} />
+      <div className="min-h-screen w-full flex justify-center items-center bg-white p-4">
+        <main className="flex flex-col justify-center items-center w-full max-w-5xl">
+          <div className="flex w-full bg-[#F0EFFF] shadow-md rounded-md p-4 md:p-10">
+            <div className="rounded-lg p-4 md:p-6 w-full max-h-fit">
+              <BackButton/>
+              <Stepper steps={STEPS} step={step} />
             {renderStep()}
             <div className="mt-6 flex flex-col-reverse md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
               {step > 1 && (
