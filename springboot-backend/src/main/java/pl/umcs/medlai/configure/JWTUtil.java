@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
@@ -22,10 +24,11 @@ public class JWTUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
     public String generateToken(Map<String, Object> claims) {
+        LocalDateTime expirationTime = LocalDateTime.now().plusYears(5);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(Date.from(Instant.now().plus(5, ChronoUnit.YEARS)))
+                .setExpiration(Date.from(expirationTime.atZone(ZoneId.systemDefault()).toInstant()))
                 .signWith(key)
                 .compact();
     }
