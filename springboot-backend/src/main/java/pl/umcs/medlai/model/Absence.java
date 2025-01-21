@@ -22,5 +22,6 @@ public class Absence {
     private AbsenceReason absence_reason;
     @ManyToOne
     @JoinColumn(name="doctor_id")
+    @JsonBackReference
     private Doctor doctor;
 }

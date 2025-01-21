@@ -3,6 +3,7 @@ package pl.umcs.medlai.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +24,7 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name="doctor_id")
     @JsonBackReference
+    @ToString.Exclude
     private Doctor doctor;
     @Enumerated(EnumType.STRING)
     private Status status;

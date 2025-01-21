@@ -1,5 +1,6 @@
 package pl.umcs.medlai.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,6 +22,7 @@ public class Schedule {
     private LocalDate valid_to;
     @ManyToOne
     @JoinColumn(name="doctor_id")
+    @JsonBackReference
     private Doctor doctor;
 
 }
