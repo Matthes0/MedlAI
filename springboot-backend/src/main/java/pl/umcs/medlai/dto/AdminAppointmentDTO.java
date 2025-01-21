@@ -1,17 +1,17 @@
-package pl.umcs.medlai.model;
+package pl.umcs.medlai.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import pl.umcs.medlai.model.Status;
 
 import java.time.LocalDateTime;
 
 @Data
-@Entity
-@Table(name="Appointment")
-public class Appointment {
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+@AllArgsConstructor
+public class AdminAppointmentDTO {
+
     private Integer id;
     private LocalDateTime start_date;
     private String patient_first_name;
@@ -20,10 +20,7 @@ public class Appointment {
     private String patient_phone;
     private String patient_address;
     private String patient_pesel;
-    @ManyToOne
-    @JoinColumn(name="doctor_id")
-    @JsonBackReference
-    private Doctor doctor;
+    private int doctor_id;
     @Enumerated(EnumType.STRING)
     private Status status;
 }

@@ -24,4 +24,5 @@ public class DoctorController {
         // System.out.println(doctors);
         return doctors;
     }
+
 }

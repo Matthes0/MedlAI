@@ -16,11 +16,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/api/appointment")
 public class AppointmentController {
+    public AppointmentController(AppointmentService appointmentService, EmailService emailService) {
+        this.appointmentService = appointmentService;
+        this.emailService = emailService;
+    }
 
-    @Autowired
-    private AppointmentService appointmentService;
-    @Autowired
-    private EmailService emailService;
+    private final AppointmentService appointmentService;
+    private final EmailService emailService;
 
     @ResponseBody
     @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = "application/json")

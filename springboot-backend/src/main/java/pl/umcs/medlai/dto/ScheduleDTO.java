@@ -1,18 +1,14 @@
-package pl.umcs.medlai.model;
+package pl.umcs.medlai.dto;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import pl.umcs.medlai.model.DayOfWeek;
+import pl.umcs.medlai.model.Doctor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@Entity
-@Data
-@Table(name="Schedule")
-public class Schedule {
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+public class ScheduleDTO {
+
     private Integer id;
     @Enumerated(EnumType.STRING)
     private DayOfWeek day_of_week;

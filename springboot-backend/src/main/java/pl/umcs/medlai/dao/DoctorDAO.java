@@ -1,9 +1,7 @@
 package pl.umcs.medlai.dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import pl.umcs.medlai.model.Appointment;
 import pl.umcs.medlai.model.Doctor;
@@ -35,5 +33,21 @@ public class DoctorDAO {
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+    @Transactional
+    public Doctor save(Doctor doctor){
+        if (getById(doctor.getId()).isEmpty()) {
+            entityManager.persist(doctor);
+            return doctor;
+        } else {
+            return entityManager.merge(doctor);
+        }
+    }
+@Transactional
+    public void delete(Integer id){
+        getById(id).ifPresent(doctor -> entityManager.remove(doctor));
+    }
+    public boolean existsById(Integer id){
+        return getById(id).isPresent();
     }
 }

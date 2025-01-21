@@ -1,8 +1,8 @@
 package pl.umcs.medlai.model;
 
 public enum AbsenceReason {
-    Vacation,
+    VACATION,
     L4,
-    Childcare,
-    Other,
+    CHILDCARE,
+    OTHER,
 }

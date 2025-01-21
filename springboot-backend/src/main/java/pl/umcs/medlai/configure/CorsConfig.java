@@ -13,11 +13,11 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173") // React app's URL
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*") // Allow all headers
-                        .allowCredentials(true); // Allow cookies and credentials
+                registry.addMapping("/**") // Zezwala na wszystkie endpointy
+                        .allowedOrigins("http://localhost:5173", "http://localhost:5174") // Adres frontendu
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Dozwolone metody HTTP
+                        .allowedHeaders("*") // Dozwolone nagłówki
+                        .allowCredentials(true); // Zezwolenie na ciasteczka (opcjonalnie)
             }
         };
     }
