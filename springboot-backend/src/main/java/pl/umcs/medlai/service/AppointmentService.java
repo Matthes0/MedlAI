@@ -33,9 +33,6 @@ public class AppointmentService {
         return this.appointmentDAO.getById(id);
     }
 
-    public List<Appointment> getAll() {
-        return this.appointmentDAO.getAll();
-    }
 
     @Transactional
     public void saveOrUpdate(Appointment appointment) {
@@ -83,7 +80,8 @@ public class AppointmentService {
         LocalTime startTime = schedule.getStart_time();
         LocalTime endTime = schedule.getEnd_time();
         while (!(startTime.plusMinutes(30)).isAfter(endTime)) {
-            if (this.appointmentDAO.getByDate(date.atTime(startTime)).isEmpty()) {
+            Optional<Appointment> existingAppointment = this.appointmentDAO.getByDate(date.atTime(startTime));
+            if (existingAppointment.isEmpty() || existingAppointment.get().getStatus() == Status.CANCELLED) {
                 appointments.add(new AppointmentDTO(
                         id,
                         doctor.getId(),
@@ -111,19 +109,6 @@ public class AppointmentService {
         appointment.setPatient_pesel(appointmentDTO.getPatient_pesel());
         appointment.setStatus(appointmentDTO.getStatus());
         return appointment;
-    }
-
-    @Transactional
-    public Appointment updateAppointmentStatus(Integer appointmentId, Status newStatus) {
-        Optional<Appointment> optionalAppointment = getById(appointmentId);
-
-        if (optionalAppointment.isPresent()) {
-            Appointment appointment = optionalAppointment.get();
-            appointment.setStatus(newStatus);
-            return appointmentDAO.saveOrUpdate(appointment);
-        } else {
-            throw new IllegalArgumentException("Appointment with ID " + appointmentId + " not found.");
-        }
     }
 
     public List<AdminAppointmentDTO> getAllAppointments() {
