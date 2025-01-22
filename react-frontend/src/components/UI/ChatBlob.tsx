@@ -1,6 +1,7 @@
 import { LoaderCircle } from "lucide-react";
 import React from "react";
 import { BeatLoader } from "react-spinners";
+import { replaceNewlinesWithBr } from "../../views/AIModule";
 
 interface ChatBlobProps {
   name: string;
@@ -100,9 +101,10 @@ export const ChatBlob: React.FC<ChatBlobProps> = ({ message, name, role }) => {
             {!role ? "AI" : role}
           </span>
         </div>
-        <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
-          {!message ? <BeatLoader color="white" size={8} /> : message}
-        </p>
+        <p
+          className="text-sm font-normal py-2.5 text-gray-900 dark:text-white"
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
       </div>
     </div>
   );

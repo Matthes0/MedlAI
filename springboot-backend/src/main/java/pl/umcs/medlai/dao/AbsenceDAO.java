@@ -33,12 +33,6 @@ public class AbsenceDAO {
         }
     }
 
-    public List<Absence> findAllByDoctorId(Integer doctor_id) {
-        TypedQuery<Absence> query = entityManager.createQuery(FIND_ALL_BY_DOCTOR_ID, Absence.class);
-        query.setParameter("doctor_id", doctor_id);
-        return query.getResultList();
-    }
-
     public Absence save(Absence absence) {
         if (getById(absence.getId()).isEmpty()) {
             entityManager.persist(absence);
