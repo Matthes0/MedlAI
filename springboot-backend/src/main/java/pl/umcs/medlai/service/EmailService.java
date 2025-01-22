@@ -11,7 +11,6 @@ import java.util.Map;
 
 @Service
 public class EmailService {
-
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -21,6 +20,7 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setFrom("noreply@medlai.com");
+        message.setReplyTo("noreply@medlai.com");
         message.setSubject(subject);
         message.setText(body);
         mailSender.send(message);
@@ -39,5 +39,4 @@ public class EmailService {
         Claims claims = jwt.validateToken(token);
         return (Integer) claims.get("appointmentId");
     }
-
 }
