@@ -7,6 +7,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import pl.umcs.medlai.model.Appointment;
+import pl.umcs.medlai.model.Status;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,8 @@ public class AppointmentDAO {
     private final String GET_ALL_JPQL = "FROM pl.umcs.medlai.model.Appointment";
     private final String GET_BY_ID_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.id = :id";
     private final String GET_BY_DATE_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.start_date = :start_date";
+    private final String GET_BY_DOCTOR_ID_JPQL = "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.doctor.id = :doctorId";
+    private final String GET_BY_STATUS_JPQL = "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.status = :status";
     public AppointmentDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -57,6 +60,16 @@ public class AppointmentDAO {
         getById(id).ifPresent(appointment -> entityManager.remove(appointment));
     }
 
+    public List<Appointment> findByDoctorId(Integer doctorId) {
+        TypedQuery<Appointment> query = entityManager.createQuery(GET_BY_DOCTOR_ID_JPQL, Appointment.class);
+        query.setParameter("doctorId", doctorId);
+        return query.getResultList();
+    }
+    public List<Appointment> findByStatus(Status status) {
+        TypedQuery<Appointment> query = entityManager.createQuery(GET_BY_STATUS_JPQL, Appointment.class);
+        query.setParameter("status", status);
+        return query.getResultList();
+    }
     @Transactional
     public Appointment save(Appointment appointment){
         System.out.println("APPOINTMENT "+ appointment);
