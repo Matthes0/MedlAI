@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import Button from "../components/Button";
 import { ChatBlob } from "../components/UI/ChatBlob";
@@ -6,15 +6,48 @@ import BackButton from "../components/UI/BackButton";
 
 interface ChatMessage {
   message: string;
-  role: "You" | "AI";
+  role: "Ty" | "AI";
   name: string;
+  isTyping?: boolean;
 }
 
 const API_URL = "http://yuumi.skni.umcs.pl:8000";
 
+export const replaceNewlinesWithBr = (input: string) => {
+  return input.replace(/\n/g, "<br/>");
+};
+
 export const AIModule = () => {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const simulateTyping = async (text: string): Promise<string> => {
+    return new Promise((resolve) => {
+      let displayedText = "";
+      let currentIndex = 0;
+
+      const typingInterval = setInterval(() => {
+        if (currentIndex < text.length) {
+          displayedText += text[currentIndex];
+          currentIndex++;
+
+          setChatHistory((prev) => {
+            const newHistory = [...prev];
+            newHistory[newHistory.length - 1] = {
+              ...newHistory[newHistory.length - 1],
+              message: displayedText,
+              isTyping: true,
+            };
+            return newHistory;
+          });
+        } else {
+          clearInterval(typingInterval);
+          resolve(text);
+        }
+      }, 30);
+    });
+  };
 
   const mutation: UseMutationResult<string, Error, string> = useMutation({
     mutationFn: async (symptoms: string) => {
@@ -36,21 +69,39 @@ export const AIModule = () => {
 
       return response.text();
     },
-    onSuccess: (data) => {
-      const newMessages: ChatMessage[] = [
+    onSuccess: async (data) => {
+      setChatHistory((prev) => [
+        ...prev,
         {
           message,
-          role: "You",
-          name: "You",
+          role: "Ty",
+          name: "Ty",
         },
+      ]);
+
+      setChatHistory((prev) => [
+        ...prev,
         {
-          message: data,
+          message: "",
           role: "AI",
           name: "Dr. Mengele",
+          isTyping: true,
         },
-      ];
+      ]);
 
-      setChatHistory((prev) => [...prev, ...newMessages]);
+      setIsTyping(true);
+      await simulateTyping(data);
+      setIsTyping(false);
+
+      setChatHistory((prev) => {
+        const newHistory = [...prev];
+        newHistory[newHistory.length - 1] = {
+          ...newHistory[newHistory.length - 1],
+          isTyping: false,
+        };
+        return newHistory;
+      });
+
       setMessage("");
     },
     onError: (error: Error) => {
@@ -66,6 +117,14 @@ export const AIModule = () => {
     }
 
     mutation.mutate(message);
+  };
+
+  const filterAndReplace = (input: string): string => {
+    return input
+      .replace(/['"]/g, "")
+      .replace(/<s>/g, "")
+      .replace(/\n\n/g, "</br></br>")
+      .replace(/\n/g, "</br>");
   };
 
   return (
@@ -119,7 +178,7 @@ export const AIModule = () => {
                 <ChatBlob
                   key={index}
                   name={chat.name}
-                  message={chat.message}
+                  message={filterAndReplace(chat.message)}
                   role={chat.role}
                 />
               ))
