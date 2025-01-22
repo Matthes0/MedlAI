@@ -8,7 +8,7 @@ import { DoctorCard } from "../components/DoctorCard.tsx";
 import { TimeSlot } from "../components/TimeSlot.tsx";
 import { Stepper } from "../components/Stepper.tsx";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Types
 export interface Doctor {
@@ -42,7 +42,7 @@ interface Appointment {
   patient_phone: string;
   patient_pesel: string;
   patient_address: string;
-  status: string
+  status: string;
 }
 
 // Validation constants
@@ -101,13 +101,15 @@ const CustomDateInput = React.forwardRef<
 ));
 
 const AppointmentBooking: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [personalData, setPersonalData] = useState<PersonalDataForm | null>(null);
+  const [personalData, setPersonalData] = useState<PersonalDataForm | null>(
+    null
+  );
   // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const queryDoctor = useQuery({
     queryKey: ["doctor"],
@@ -145,35 +147,35 @@ const AppointmentBooking: React.FC = () => {
   };
   function convertDateFormat(dateString) {
     // Split the input string by "."
-    const [day, month, year] = dateString.split('.');
+    const [day, month, year] = dateString.split(".");
 
     // Return the formatted date in "yyyy-mm-dd" format
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   }
 
-    const mutation = useMutation({
-        mutationFn: (appointment: Appointment) =>
-            fetch("http://localhost:8080/api/appointment/add", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json", // Set the correct Content-Type
-                },
-              body: JSON.stringify(appointment),
-            }).then((res) => {
-                if (!res.ok) {
-                    throw new Error("Failed to create appointment");
-                }
-                return res.json();
-            }),
-        onSuccess: () => {
-            alert("Wizyta została umówiona! Potwierdź ją teraz mailowo.");
-            queryClient.invalidateQueries(["appointment"]);
-            navigate("/");
+  const mutation = useMutation({
+    mutationFn: (appointment: Appointment) =>
+      fetch("http://localhost:8080/api/appointment/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Set the correct Content-Type
         },
-        onError: (error) => {
-            alert(`Wystąpił błąd: ${error.message}`);
-        },
-    });
+        body: JSON.stringify(appointment),
+      }).then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to create appointment");
+        }
+        return res.json();
+      }),
+    onSuccess: () => {
+      alert("Wizyta została umówiona! Potwierdź ją teraz mailowo.");
+      queryClient.invalidateQueries(["appointment"]);
+      navigate("/");
+    },
+    onError: (error) => {
+      alert(`Wystąpił błąd: ${error.message}`);
+    },
+  });
 
   const {
     register,
@@ -220,7 +222,10 @@ const AppointmentBooking: React.FC = () => {
     if (selectedDoctor && selectedDate && selectedTime) {
       const appointment: Appointment = {
         doctor_id: selectedDoctor.id,
-        start_date: convertDateFormat(selectedDate.toLocaleDateString())+"T"+selectedTime.toString(),
+        start_date:
+          convertDateFormat(selectedDate.toLocaleDateString()) +
+          "T" +
+          selectedTime.toString(),
         patient_first_name: data.firstName,
         patient_last_name: data.lastName,
         patient_email: data.email,
@@ -379,14 +384,14 @@ const AppointmentBooking: React.FC = () => {
               <div>
                 <h3 className="font-medium">Dane pacjenta</h3>
                 {personalData && (
-                    <p>
-                      Imię: {personalData.firstName} <br />
-                      Nazwisko: {personalData.lastName} <br />
-                      Email: {personalData.email} <br />
-                      Telefon: {personalData.phone} <br />
-                      PESEL: {personalData.pesel} <br />
-                      Adres: {personalData.address}
-                    </p>
+                  <p>
+                    Imię: {personalData.firstName} <br />
+                    Nazwisko: {personalData.lastName} <br />
+                    Email: {personalData.email} <br />
+                    Telefon: {personalData.phone} <br />
+                    PESEL: {personalData.pesel} <br />
+                    Adres: {personalData.address}
+                  </p>
                 )}
               </div>
             </div>
@@ -398,12 +403,12 @@ const AppointmentBooking: React.FC = () => {
     }
   };
   return (
-      <div className="min-h-screen w-full flex justify-center items-center bg-white p-4">
-        <main className="flex flex-col justify-center items-center w-full max-w-5xl">
-          <div className="flex w-full bg-[#F0EFFF] shadow-md rounded-md p-4 md:p-10">
-            <div className="rounded-lg p-4 md:p-6 w-full max-h-fit">
-              <BackButton/>
-              <Stepper steps={STEPS} step={step} />
+    <div className="min-h-screen w-full flex justify-center items-center  p-4">
+      <main className="flex flex-col justify-center items-center w-full max-w-5xl">
+        <div className="flex w-full bg-[#F0EFFF] shadow-md rounded-md p-4 md:p-10">
+          <div className="rounded-lg p-4 md:p-6 w-full max-h-fit">
+            <BackButton />
+            <Stepper steps={STEPS} step={step} />
             {renderStep()}
             <div className="mt-6 flex flex-col-reverse md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
               {step > 1 && (
