@@ -121,6 +121,7 @@ public ResponseEntity<List<AdminAppointmentDTO>> getAllAppointments() {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAppointment);
     }
 
+    @ResponseBody
     @DeleteMapping("/appointments/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable Integer id) {
         appointmentService.deleteAppointment(id);
