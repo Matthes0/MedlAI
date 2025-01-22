@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import Button from "../components/Button";
 import { ChatBlob } from "../components/UI/ChatBlob";
 import BackButton from "../components/UI/BackButton";
+import { Alert } from "../components/UI/Alert";
+import { ErrorInfo } from "../components/UI/ErrorInfo";
 
 interface ChatMessage {
   message: string;
@@ -13,14 +15,11 @@ interface ChatMessage {
 
 const API_URL = "http://yuumi.skni.umcs.pl:8000";
 
-export const replaceNewlinesWithBr = (input: string) => {
-  return input.replace(/\n/g, "<br/>");
-};
-
 export const AIModule = () => {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const simulateTyping = async (text: string): Promise<string> => {
     return new Promise((resolve) => {
@@ -51,6 +50,7 @@ export const AIModule = () => {
 
   const mutation: UseMutationResult<string, Error, string> = useMutation({
     mutationFn: async (symptoms: string) => {
+      setError(null);
       const response = await fetch(
         `${API_URL}/medical-advice?symptoms=${encodeURIComponent(symptoms)}`,
         {
@@ -105,6 +105,7 @@ export const AIModule = () => {
       setMessage("");
     },
     onError: (error: Error) => {
+      setError(error.message);
       console.error("Błąd podczas wysyłania zapytania:", error);
     },
   });
@@ -120,11 +121,7 @@ export const AIModule = () => {
   };
 
   const filterAndReplace = (input: string): string => {
-    return input
-      .replace(/['"]/g, "")
-      .replace(/<s>/g, "")
-      .replace(/\n\n/g, "</br></br>")
-      .replace(/\n/g, "</br>");
+    return input.replace(/['"]/g, "").replace(/<s>/g, "");
   };
 
   return (
@@ -136,6 +133,13 @@ export const AIModule = () => {
       <div className="w-full max-w-6xl flex flex-col-reverse lg:flex-row gap-6 bg-[#F0EFFF] shadow-md rounded-md p-4 md:p-6 lg:p-10">
         <div className="w-full lg:w-1/2 bg-white rounded-lg p-4 md:p-6">
           <BackButton />
+          <Alert
+            title="Uwaga!"
+            content="Pamiętaj, że sztuczna inteligencja tylko jest sugestią rekomendowanego
+        leczenia na podstawie podanych danych"
+          />
+
+          {error ? <ErrorInfo title="Błąd!" content={error} /> : null}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

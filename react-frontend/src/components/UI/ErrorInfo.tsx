@@ -5,11 +5,11 @@ interface IProps {
   content: string;
 }
 
-export const Alert: React.FC<IProps> = ({ title, content }) => {
+export const ErrorInfo: React.FC<IProps> = ({ title, content }) => {
   return (
     <div
       id="alert-additional-content-4"
-      className={`p-4 mb-4  text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50`}
+      className={`p-4 mb-4  text-red-600 border border-red-300 rounded-lg bg-red-50`}
       role="alert"
     >
       <div className="flex items-center">
