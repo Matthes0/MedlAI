@@ -3,8 +3,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { AIModule } from "./views/AIModule.tsx";
 import AppointmentBooking from "./views/Assignment.tsx";
 import { Admin } from "./views/Admin.tsx";
-import { LoginForm } from "./views/LoginForm.tsx";
-import {ManageAssignment} from "./views/ManageAssignment.tsx";
+import { ManageAssignment } from "./views/ManageAssignment.tsx";
 const App = () => {
   return (
     <BrowserRouter>
@@ -14,8 +13,6 @@ const App = () => {
         <Route path="/book" element={<AppointmentBooking />} />
         <Route path="/manage" element={<ManageAssignment />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/login" element={<LoginForm />} />
-
       </Routes>
     </BrowserRouter>
   );
