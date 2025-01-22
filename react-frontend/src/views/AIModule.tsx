@@ -46,7 +46,7 @@ export const AIModule = () => {
         {
           message: data,
           role: "AI",
-          name: "AI Assistant",
+          name: "Dr. Mengele",
         },
       ];
 
