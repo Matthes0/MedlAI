@@ -1,11 +1,9 @@
 package pl.umcs.medlai.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import pl.umcs.medlai.model.Status;
-
 import java.time.LocalDateTime;
 
 @Data

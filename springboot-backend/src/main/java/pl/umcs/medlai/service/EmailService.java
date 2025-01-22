@@ -12,8 +12,6 @@ import java.util.Map;
 @Service
 public class EmailService {
 
-    //private static final long EXPIRATION_TIME = 3600000; // 60 minutes in milliseconds
-
     @Autowired
     private JavaMailSender mailSender;
     @Autowired

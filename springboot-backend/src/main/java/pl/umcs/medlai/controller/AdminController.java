@@ -1,6 +1,5 @@
 package pl.umcs.medlai.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,11 +11,9 @@ import pl.umcs.medlai.service.AppointmentService;
 import pl.umcs.medlai.service.DoctorService;
 import pl.umcs.medlai.service.ScheduleService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @Controller
 @RequestMapping("/admin")
@@ -166,14 +163,10 @@ public ResponseEntity<List<AdminAppointmentDTO>> getAllAppointments() {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
-
-
     @DeleteMapping("/schedules/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Integer id) {
         scheduleService.deleteSchedule(id);
         return ResponseEntity.noContent().build();
     }
-
-
 
 }

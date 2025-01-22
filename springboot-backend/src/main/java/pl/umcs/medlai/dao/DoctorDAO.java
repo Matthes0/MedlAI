@@ -3,7 +3,6 @@ package pl.umcs.medlai.dao;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
-import pl.umcs.medlai.model.Appointment;
 import pl.umcs.medlai.model.Doctor;
 
 import java.util.List;

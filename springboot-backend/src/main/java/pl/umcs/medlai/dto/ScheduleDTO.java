@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import pl.umcs.medlai.model.DayOfWeek;
-import pl.umcs.medlai.model.Doctor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,7 +18,4 @@ public class ScheduleDTO {
     private LocalTime start_time;
     private LocalTime end_time;
     private LocalDate valid_to;
-//    @ManyToOne
-//    @JoinColumn(name="doctor_id")
-
 }

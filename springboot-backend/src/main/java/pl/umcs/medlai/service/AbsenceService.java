@@ -7,7 +7,6 @@ import pl.umcs.medlai.dao.DoctorDAO;
 import pl.umcs.medlai.dto.AbsenceDTO;
 import pl.umcs.medlai.model.Absence;
 import pl.umcs.medlai.model.Doctor;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,27 +21,6 @@ public class AbsenceService {
     public AbsenceService(DoctorDAO doctorDAO, AbsenceDAO absenceDAO) {
         this.doctorDAO = doctorDAO;
         this.absenceDAO = absenceDAO;
-    }
-
-
-    @Transactional
-    public Absence setDoctorAbsence(Integer doctorId, Absence absenceDetails) {
-        Optional<Doctor> optionalDoctor = doctorDAO.getById(doctorId);
-        if (optionalDoctor.isPresent()) {
-            Doctor doctor = optionalDoctor.get();
-            Absence absence = new Absence();
-            absence.setDoctor(doctor);
-            absence.setStart_date(absenceDetails.getStart_date());
-            absence.setEnd_date(absenceDetails.getEnd_date());
-            absence.setAbsence_reason(absenceDetails.getAbsence_reason());
-            return absenceDAO.save(absence);
-        } else {
-            throw new IllegalArgumentException("Doctor with ID " + doctorId + " not found.");
-        }
-    }
-
-    public List<Absence> getAbsencesByDoctorId(Integer doctorId) {
-        return absenceDAO.findAllByDoctorId(doctorId);
     }
 
     @Transactional
@@ -66,10 +44,6 @@ public class AbsenceService {
         }
         return absenceDTOs;
     }
-//    public Absence getAbsenceById(Integer absenceId) {
-//        return absenceDAO.getById(absenceId)
-//                .orElseThrow(() -> new IllegalArgumentException("Absence with ID " + absenceId + " not found."));
-//    }
     public AbsenceDTO getAbsenceById(Integer absenceId) {
         Optional<Absence> optionalAbsence = absenceDAO.getById(absenceId);
         if (optionalAbsence.isPresent()) {

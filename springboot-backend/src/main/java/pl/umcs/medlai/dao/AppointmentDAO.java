@@ -1,21 +1,14 @@
 package pl.umcs.medlai.dao;
 
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
-import pl.umcs.medlai.dto.AbsenceDTO;
-import pl.umcs.medlai.dto.AdminAppointmentDTO;
-import pl.umcs.medlai.model.Absence;
 import pl.umcs.medlai.model.Appointment;
 import pl.umcs.medlai.model.Status;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

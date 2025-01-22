@@ -9,7 +9,6 @@ import pl.umcs.medlai.dto.AdminAppointmentDTO;
 import pl.umcs.medlai.dto.AppointmentBookedDTO;
 import pl.umcs.medlai.dto.AppointmentDTO;
 import pl.umcs.medlai.model.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -126,17 +125,6 @@ public class AppointmentService {
             throw new IllegalArgumentException("Appointment with ID " + appointmentId + " not found.");
         }
     }
-//    @Transactional
-//    public List<Appointment> getAppointmentsByDoctorAndDate(Integer doctorId, LocalDate date) {
-//        LocalDateTime startOfDay = date.atStartOfDay();
-//        LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
-//        return appointmentRepository.findByDoctorIdAndStart_DateBetween(doctorId, startOfDay, endOfDay);
-//    }
-
-    @Transactional
-    public Appointment cancelAppointment(Integer appointmentId) {
-        return updateAppointmentStatus(appointmentId, Status.CANCELLED);
-    }
 
     public List<AdminAppointmentDTO> getAllAppointments() {
         List<AdminAppointmentDTO> appointmentDTOS = new ArrayList<>();
@@ -158,7 +146,6 @@ public class AppointmentService {
         return appointmentDTOS;
     }
 
-
     public Optional<Appointment> getAppointmentById(Integer appointmentId) {
         return appointmentDAO.getById(appointmentId);
     }
@@ -171,10 +158,8 @@ public class AppointmentService {
     @Transactional
     public Appointment updateAppointment(Integer appointmentId, Appointment appointmentDetails) {
         Optional<Appointment> optionalAppointment = appointmentDAO.getById(appointmentId);
-
         if (optionalAppointment.isPresent()) {
             Appointment appointment = optionalAppointment.get();
-
             appointment.setStart_date(appointmentDetails.getStart_date());
             appointment.setPatient_first_name(appointmentDetails.getPatient_first_name());
             appointment.setPatient_last_name(appointmentDetails.getPatient_last_name());
@@ -183,8 +168,6 @@ public class AppointmentService {
             appointment.setPatient_address(appointmentDetails.getPatient_address());
             appointment.setPatient_pesel(appointmentDetails.getPatient_pesel());
             appointment.setStatus(appointmentDetails.getStatus());
-
-
             return appointmentDAO.save(appointment);
         } else {
             throw new IllegalArgumentException("Appointment with ID " + appointmentId + " not found.");

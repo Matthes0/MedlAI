@@ -6,9 +6,6 @@ import pl.umcs.medlai.dao.DoctorDAO;
 import pl.umcs.medlai.dto.AdminDoctorDTO;
 import pl.umcs.medlai.dto.DoctorDTO;
 import pl.umcs.medlai.model.Doctor;
-import pl.umcs.medlai.model.Status;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,19 +52,6 @@ public class DoctorService {
         }
         doctorDAO.delete(id);
     }
-    public boolean hasFutureAppointments(Integer doctorId) {
-        Optional<Doctor> optionalDoctor = doctorDAO.getById(Math.toIntExact(doctorId));
-
-        if (optionalDoctor.isPresent()) {
-            Doctor doctor = optionalDoctor.get();
-            return doctor.getAppointments().stream()
-                    .anyMatch(appointment ->
-                            appointment.getStart_date().isAfter(LocalDateTime.now()) &&
-                                    appointment.getStatus() == Status.SCHEDULED);
-        } else {
-            throw new IllegalArgumentException("Doctor with ID " + doctorId + " not found.");
-        }
-    }
 
     @Transactional
     public AdminDoctorDTO getDoctorById(Long doctorId) {
@@ -90,7 +74,6 @@ public class DoctorService {
     public Doctor createDoctor(Doctor doctorDetails) {
         return doctorDAO.save(doctorDetails);
     }
-
     public List<AdminDoctorDTO> getDoctorsAdmin(){
         List<AdminDoctorDTO> doctors_to_send = new ArrayList<>();
         List<Doctor> doctors = doctorDAO.getAll();
@@ -105,5 +88,4 @@ public class DoctorService {
         }
         return doctors_to_send;
     }
-
 }

@@ -1,6 +1,5 @@
 package pl.umcs.medlai.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import pl.umcs.medlai.model.Status;

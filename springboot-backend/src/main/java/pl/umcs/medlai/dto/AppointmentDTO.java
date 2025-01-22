@@ -3,7 +3,6 @@ package pl.umcs.medlai.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import pl.umcs.medlai.model.Specialization;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

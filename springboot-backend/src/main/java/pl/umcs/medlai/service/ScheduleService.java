@@ -7,7 +7,6 @@ import pl.umcs.medlai.dao.ScheduleDAO;
 import pl.umcs.medlai.dto.ScheduleDTO;
 import pl.umcs.medlai.model.Doctor;
 import pl.umcs.medlai.model.Schedule;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,36 +24,11 @@ public class ScheduleService {
     }
 
     @Transactional
-    public Schedule setDoctorSchedule(Integer doctorId, Schedule scheduleDetails) {
-        Optional<Doctor> optionalDoctor = doctorDAO.getById(doctorId);
-        if (optionalDoctor.isPresent()) {
-            Doctor doctor = optionalDoctor.get();
-            Schedule schedule = new Schedule();
-            schedule.setDoctor(doctor);
-            schedule.setDay_of_week(scheduleDetails.getDay_of_week());
-            schedule.setStart_time(scheduleDetails.getStart_time());
-            schedule.setEnd_time(scheduleDetails.getEnd_time());
-            schedule.setValid_to(scheduleDetails.getValid_to());
-            return scheduleDAO.save(schedule);
-        } else {
-            throw new IllegalArgumentException("Doctor with ID " + doctorId + " not found.");
-        }
-    }
-
-    public List<Schedule> getSchedulesByDoctorId(Integer doctorId) {
-        return scheduleDAO.findAllByDoctorId(doctorId);
-    }
-
-    @Transactional
     public void deleteSchedule(Integer scheduleId) {
         if (!scheduleDAO.existsById(scheduleId)) {
             throw new IllegalArgumentException("Schedule with ID " + scheduleId + " not found.");
         }
         scheduleDAO.delete(scheduleId);
-    }
-
-    public List<Schedule> getAll() {
-        return scheduleDAO.findAll();
     }
 
     public List<ScheduleDTO> getAllSchedules() {
@@ -126,7 +100,6 @@ public class ScheduleService {
                     throw new IllegalArgumentException("Doctor with ID " + scheduleDetails.getDoctor().getId() + " not found.");
                 }
             }
-
             return scheduleDAO.save(existingSchedule);
         } else {
             throw new IllegalArgumentException("Schedule with ID " + scheduleId + " not found.");
