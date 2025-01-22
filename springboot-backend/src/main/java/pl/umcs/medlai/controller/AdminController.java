@@ -12,6 +12,7 @@ import pl.umcs.medlai.service.AppointmentService;
 import pl.umcs.medlai.service.DoctorService;
 import pl.umcs.medlai.service.ScheduleService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,13 +94,7 @@ public class AdminController {
         Absence updatedAbsence = absenceService.updateAbsence(id, absenceDetails);
         return ResponseEntity.ok(updatedAbsence);
     }
-    @PutMapping("/appointment/{id}")
-    public ResponseEntity<Appointment> updateAppointment(
-            @PathVariable Integer id,
-            @RequestBody Appointment appointmentDetails) {
-        Appointment updatedAppointment = appointmentService.updateAppointment(id, appointmentDetails);
-        return ResponseEntity.ok(updatedAppointment);
-    }
+
     @DeleteMapping("/absences/{id}")
     public ResponseEntity<Void> deleteAbsence(@PathVariable Integer id) {
         absenceService.deleteAbsence(id);
@@ -115,7 +110,13 @@ public ResponseEntity<List<AdminAppointmentDTO>> getAllAppointments() {
         Optional<Appointment> appointmentOptional = appointmentService.getAppointmentById(id);
         return appointmentOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
+    @PutMapping("/appointment/{id}")
+    public ResponseEntity<Appointment> updateAppointment(
+            @PathVariable Integer id,
+            @RequestBody Appointment appointmentDetails) {
+        Appointment updatedAppointment = appointmentService.updateAppointment(id, appointmentDetails);
+        return ResponseEntity.ok(updatedAppointment);
+    }
     @PostMapping("/appointment")
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment) {
         Appointment createdAppointment = appointmentService.createAppointment(appointment);
@@ -128,10 +129,11 @@ public ResponseEntity<List<AdminAppointmentDTO>> getAllAppointments() {
         return ResponseEntity.noContent().build();
     }
 
-//    @GetMapping("/schedules")
-//    public ResponseEntity<List<ScheduleDTO>> getAllSchedules() {
-//        return ResponseEntity.ok(scheduleService.getAllSchedules());
-//    }
+    @GetMapping("/schedules/get")
+    public ResponseEntity<List<Schedule>> getAllSchedules() {
+        List<Schedule> schedule = scheduleService.getAll();
+        return ResponseEntity.ok(schedule);
+    }
 //
 //    @GetMapping("/schedules/{id}")
 //    public ResponseEntity<ScheduleDTO> getScheduleById(@PathVariable Integer id) {

@@ -175,7 +175,6 @@ public class AppointmentService {
         if (optionalAppointment.isPresent()) {
             Appointment appointment = optionalAppointment.get();
 
-            appointment.setId(appointmentDetails.getId());
             appointment.setStart_date(appointmentDetails.getStart_date());
             appointment.setPatient_first_name(appointmentDetails.getPatient_first_name());
             appointment.setPatient_last_name(appointmentDetails.getPatient_last_name());
@@ -183,15 +182,9 @@ public class AppointmentService {
             appointment.setPatient_phone(appointmentDetails.getPatient_phone());
             appointment.setPatient_address(appointmentDetails.getPatient_address());
             appointment.setPatient_pesel(appointmentDetails.getPatient_pesel());
+            appointment.setStatus(appointmentDetails.getStatus());
 
-            if (appointmentDetails.getDoctor() != null) {
-                Optional<Doctor> optionalDoctor = doctorDAO.getById(appointment.getDoctor().getId());
-                if (optionalDoctor.isPresent()) {
-                    appointment.setDoctor(optionalDoctor.get());
-                } else {
-                    throw new IllegalArgumentException("Doctor with ID " + appointment.getDoctor().getId() + " not found.");
-                }
-            }
+
             return appointmentDAO.save(appointment);
         } else {
             throw new IllegalArgumentException("Appointment with ID " + appointmentId + " not found.");

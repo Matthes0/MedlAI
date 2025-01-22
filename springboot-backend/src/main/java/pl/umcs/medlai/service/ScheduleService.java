@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import pl.umcs.medlai.dao.DoctorDAO;
 import pl.umcs.medlai.dao.ScheduleDAO;
+import pl.umcs.medlai.dto.DoctorDTO;
+import pl.umcs.medlai.dto.ScheduleDTO;
 import pl.umcs.medlai.model.Doctor;
 import pl.umcs.medlai.model.Schedule;
 
@@ -51,7 +53,7 @@ public class ScheduleService {
         scheduleDAO.delete(scheduleId);
     }
 
-    public List<Schedule> getAllSchedules() {
+    public List<Schedule> getAll() {
         return scheduleDAO.findAll();
     }
 

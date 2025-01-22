@@ -99,12 +99,27 @@ export const ManageAssignment = () => {
                             <h2 className="text-xl font-semibold mb-4">
                                 Potwierdź wizytę
                             </h2>
-                            <h2 className="text-lg font-semibold mb-4">Imię i nazwisko</h2>
-                            <p>{appointmentData.patient_first_name} {appointmentData.patient_last_name}</p>
-                            <p>{appointmentData.patient_email}</p>
-                            <p>{appointmentData.patient_phone}</p>
-                            <p>{appointmentData.patient_pesel}</p>
-                            <p>{appointmentData.patient_address}</p>
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4">Imię i nazwisko</h3>
+                                <p>{appointmentData.patient_first_name} {appointmentData.patient_last_name}</p>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4">Email</h3>
+                                <p>{appointmentData.patient_email}</p>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4">Numer telefonu</h3>
+                                <p>{appointmentData.patient_phone}</p>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4">Numer pesel</h3>
+                                <p>{appointmentData.patient_pesel}</p>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4">Adres</h3>
+                                <p>{appointmentData.patient_address}</p>
+                            </div>
+
                             <div className="border-b-2 border-blue-600 mb-5"></div>
 
                             <div className="space-y-4">
