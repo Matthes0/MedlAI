@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { ChevronLeft, Clock, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -145,13 +145,11 @@ const AppointmentBooking: React.FC = () => {
   const handleTimeSelection = (time: string) => {
     setSelectedTime(selectedTime === time ? null : time);
   };
-  function convertDateFormat(dateString) {
-    // Split the input string by "."
+  const convertDateFormat = (dateString: string) => {
     const [day, month, year] = dateString.split(".");
 
-    // Return the formatted date in "yyyy-mm-dd" format
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-  }
+  };
 
   const mutation = useMutation({
     mutationFn: (appointment: Appointment) =>
@@ -169,7 +167,7 @@ const AppointmentBooking: React.FC = () => {
       }),
     onSuccess: () => {
       alert("Wizyta została umówiona! Potwierdź ją teraz mailowo.");
-      queryClient.invalidateQueries(["appointment"]);
+      queryClient.invalidateQueries({ queryKey: ["appointment"] });
       navigate("/");
     },
     onError: (error) => {

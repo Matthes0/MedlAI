@@ -1,7 +1,4 @@
-import { LoaderCircle } from "lucide-react";
 import React from "react";
-import { BeatLoader } from "react-spinners";
-import { replaceNewlinesWithBr } from "../../views/AIModule";
 
 interface ChatBlobProps {
   name: string;

@@ -18,7 +18,6 @@ const API_URL = "http://yuumi.skni.umcs.pl:8000";
 export const AIModule = () => {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
-  const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const simulateTyping = async (text: string): Promise<string> => {
@@ -89,9 +88,7 @@ export const AIModule = () => {
         },
       ]);
 
-      setIsTyping(true);
       await simulateTyping(data);
-      setIsTyping(false);
 
       setChatHistory((prev) => {
         const newHistory = [...prev];

@@ -1,4 +1,5 @@
 import React from "react";
+//@ts-ignore
 import { ClipLoader } from "react-spinners";
 
 interface ButtonProps {

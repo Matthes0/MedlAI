@@ -1,4 +1,3 @@
-import React from "react";
 import { Header } from "../components/Header.tsx";
 import Button from "../components/Button.tsx";
 import { useNavigate } from "react-router-dom";
