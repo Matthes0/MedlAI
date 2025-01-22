@@ -18,7 +18,7 @@ public class AppointmentDAO {
     private EntityManager entityManager;
     private final String GET_ALL_JPQL = "FROM pl.umcs.medlai.model.Appointment";
     private final String GET_BY_ID_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.id = :id";
-    private final String GET_BY_DATE_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.start_date = :start_date";
+    private final String GET_BY_DATE_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.start_date = :start_date AND b.status != 'CANCELLED'";
     private final String GET_BY_DOCTOR_ID_JPQL = "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.doctor.id = :doctorId";
     private final String GET_BY_STATUS_JPQL = "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.status = :status";
     public AppointmentDAO(EntityManager entityManager) {
