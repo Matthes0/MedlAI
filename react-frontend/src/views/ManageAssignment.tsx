@@ -1,10 +1,19 @@
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {useNavigate} from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+
+// Reusable component to display label-value pairs
+const InfoField = ({ label, value }) => (
+    <div className="mb-4">
+        <h3 className="text-lg font-semibold">{label}</h3>
+        <p>{value}</p>
+    </div>
+);
 
 export const ManageAssignment = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const token = new URLSearchParams(window.location.search).get("token");
+
     const queryAppointment = useQuery({
         queryKey: ["appointment"],
         queryFn: async () => {
@@ -21,7 +30,7 @@ export const ManageAssignment = () => {
             fetch("http://localhost:8080/api/appointment/confirm", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json", // Set the correct Content-Type
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(token),
             }).then((res) => {
@@ -45,7 +54,7 @@ export const ManageAssignment = () => {
             fetch("http://localhost:8080/api/appointment/cancel", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json", // Set the correct Content-Type
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(token),
             }).then((res) => {
@@ -64,6 +73,7 @@ export const ManageAssignment = () => {
             alert(`Wystąpił błąd: ${error.message}`);
         },
     });
+
     const handleConfirm = () => {
         if (token) {
             mutationConfirm.mutate(token);
@@ -96,46 +106,32 @@ export const ManageAssignment = () => {
                 <div className="flex p-10 bg-[#F0EFFF] shadow-lg rounded-md">
                     <div className="rounded-lg p-6 w-full max-h-fit flex flex-col justify-center">
                         <div className="w-full max-w-2xl mx-auto p-5 bg-white rounded-lg shadow-sm text-black">
-                            <h2 className="text-xl font-semibold mb-4">
-                                Potwierdź wizytę
-                            </h2>
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Imię i nazwisko</h3>
-                                <p>{appointmentData.patient_first_name} {appointmentData.patient_last_name}</p>
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Email</h3>
-                                <p>{appointmentData.patient_email}</p>
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Numer telefonu</h3>
-                                <p>{appointmentData.patient_phone}</p>
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Numer pesel</h3>
-                                <p>{appointmentData.patient_pesel}</p>
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Adres</h3>
-                                <p>{appointmentData.patient_address}</p>
-                            </div>
+                            <h2 className="text-xl font-semibold mb-4">Potwierdź wizytę</h2>
+
+                            {/* Patient Information */}
+                            <InfoField label="Imię i nazwisko" value={`${appointmentData.patient_first_name} ${appointmentData.patient_last_name}`} />
+                            <InfoField label="Email" value={appointmentData.patient_email} />
+                            <InfoField label="Numer telefonu" value={appointmentData.patient_phone} />
+                            <InfoField label="Numer pesel" value={appointmentData.patient_pesel} />
+                            <InfoField label="Adres" value={appointmentData.patient_address} />
 
                             <div className="border-b-2 border-blue-600 mb-5"></div>
 
+                            {/* Doctor and Appointment Information */}
                             <div className="space-y-4">
                                 <div>
                                     <h3 className="font-medium">Lekarz</h3>
                                     <p>{appointmentData.doctor_first_name} {appointmentData.doctor_last_name}</p>
                                 </div>
-
                                 <div>
                                     <h3 className="font-medium">Termin</h3>
-                                    <p>
-                                        {appointmentData.start_date}
-                                    </p>
+                                    <p>{new Date(appointmentData.start_date).toLocaleString('pl-PL', { timeZoneName: 'short' })}</p>
+
                                 </div>
                             </div>
                         </div>
+
+                        {/* Buttons */}
                         <div className="flex space-x-6 mt-5">
                             {appointmentData.status === "TO_BE_CONFIRMED" && (
                                 <button

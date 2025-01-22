@@ -72,6 +72,7 @@ public class AdminController {
     public AbsenceDTO getAbsenceById(@PathVariable Integer id) {
         return absenceService.getAbsenceById(id);
     }
+
     @ResponseBody
     @PostMapping("/absences/")
     public ResponseEntity<AbsenceDTO> createAbsence(@RequestBody AbsenceDTO absenceDetails) {
@@ -130,23 +131,10 @@ public ResponseEntity<List<AdminAppointmentDTO>> getAllAppointments() {
     }
 
     @GetMapping("/schedules/get")
-    public ResponseEntity<List<Schedule>> getAllSchedules() {
-        List<Schedule> schedule = scheduleService.getAll();
+    public ResponseEntity<List<ScheduleDTO>> getAllSchedules() {
+        List<ScheduleDTO> schedule = scheduleService.getAllSchedules();
         return ResponseEntity.ok(schedule);
     }
-//
-//    @GetMapping("/schedules/{id}")
-//    public ResponseEntity<ScheduleDTO> getScheduleById(@PathVariable Integer id) {
-//        ScheduleDTO schedule = scheduleService.getScheduleById(id);
-//        return ResponseEntity.ok(schedule);
-//    }
-//
-//    @PostMapping("/schedules")
-//    public ResponseEntity<Schedule> createSchedule(@RequestBody ScheduleDTO scheduleDetails) {
-//        Schedule createdSchedule = scheduleService.createSchedule(scheduleDetails);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(createdSchedule);
-//    }
-
     @PutMapping("/schedules/{id}")
     public ResponseEntity<Schedule> updateSchedule(
             @PathVariable Integer id,
@@ -154,6 +142,31 @@ public ResponseEntity<List<AdminAppointmentDTO>> getAllAppointments() {
         Schedule updatedSchedule = scheduleService.updateSchedule(id, scheduleDetails);
         return ResponseEntity.ok(updatedSchedule);
     }
+
+    @GetMapping("/schedules/{id}")
+    public ResponseEntity<ScheduleDTO> getScheduleById(@PathVariable Integer id) {
+        ScheduleDTO schedule = scheduleService.getScheduleById(id);
+        return ResponseEntity.ok(schedule);
+    }
+
+
+    @ResponseBody
+    @PostMapping("/schedules")
+    public ResponseEntity<ScheduleDTO> createSchedule(@RequestBody ScheduleDTO ScheduleDetails) {
+        Schedule createdSchedule = scheduleService.createSchedule(ScheduleDetails);
+        ScheduleDTO responseDTO = new ScheduleDTO(
+                createdSchedule.getDoctor().getId(),
+                createdSchedule.getId(),
+                createdSchedule.getDay_of_week(),
+                createdSchedule.getStart_time(),
+                createdSchedule.getEnd_time(),
+                createdSchedule.getValid_to()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+    }
+
+
 
     @DeleteMapping("/schedules/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Integer id) {

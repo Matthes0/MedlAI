@@ -32,6 +32,7 @@ export const DoctorList = () => (
             <TextField source="last_name"/>
             <TextField source="email"/>
             <TextField source="phone"/>
+            <TextField source="specialization"/>
         </Datagrid>
     </List>
 );

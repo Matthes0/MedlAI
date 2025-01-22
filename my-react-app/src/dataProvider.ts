@@ -64,14 +64,14 @@ export const dataProvider: DataProvider = {
   ): Promise<CreateResult<RecordType>> => {
     let url = `${apiUrl}/${resource}`;
     if (resource === "doctors") {
-      url = `${apiUrl}/admin/doctors/create`;
+      url = `${apiUrl}/doctors/create`;
     }
 
     if (resource === "absences") {
       const absenceData = params.data as unknown as Absence;
       url = `${apiUrl}/absences/`;
     }
-
+    console.log(params.data)
     const { json } = await httpClient(url, {
       method: "POST",
       body: JSON.stringify(params.data),
@@ -90,7 +90,6 @@ export const dataProvider: DataProvider = {
     let body = JSON.stringify(params.data);
 
     if (resource === "appointments" && "status" in params.data) {
-      // Bezpieczne rzutowanie przez unknown
       const appointmentData = params.data as unknown as Appointment;
       url = `${apiUrl}/appointments/${params.id}/status`;
       body = JSON.stringify({ status: appointmentData.status });

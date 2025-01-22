@@ -29,7 +29,7 @@ public class AppointmentController {
     public AppointmentBookedDTO add(@RequestBody AppointmentBookedDTO appointmentDTO) {
         Appointment appointment = appointmentService.createAppointmentFromBookedDTO(appointmentDTO);
         this.appointmentService.saveOrUpdate(appointment);
-        //this.emailService.sendEmail(appointment.getPatient_email(), "Potwierdź wizytę w przychodni MedlAI", "Potwierdź wizytę lub nią zarządzaj \n to link: " + this.emailService.generateAppointmentLink(appointment) + "\n Miłej wizyty, MedlAI team");
+        this.emailService.sendEmail(appointment.getPatient_email(), "Potwierdź wizytę w przychodni MedlAI", "Potwierdź wizytę lub nią zarządzaj \n to link: <a> " + this.emailService.generateAppointmentLink(appointment) + "</a>\n Miłej wizyty, MedlAI team");
         System.out.println(this.emailService.generateAppointmentLink(appointment));
         return appointmentDTO;
     }

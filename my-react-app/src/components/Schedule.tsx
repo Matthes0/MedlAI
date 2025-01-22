@@ -25,29 +25,40 @@ const weekDays = [
 ];
 
 export const ScheduleList = () => (
-  <List>
-    <Datagrid rowClick="edit">
-      <ReferenceField source="doctorId" reference="doctors">
-        <TextField source="lastName" />
-      </ReferenceField>
-      <TextField source="dayOfWeek" />
-      {/* <TimeField source="startTime" />
-      <TimeField source="endTime" /> */}
-      <DateField source="validUntil" />
-    </Datagrid>
-  </List>
+    <List>
+        <Datagrid rowClick="edit">
+            <ReferenceField source="doctor_id" reference="doctors">
+                <TextField source="first_name"/>
+                <span> </span>
+                <TextField source="last_name"/>
+            </ReferenceField>
+            <TextField source="day_of_week" label="Day of Week" />
+            <TextField source="start_time" label="Start Time" />
+            <TextField source="end_time" label="End Time" />
+            <DateField source="valid_to" label="Valid Until" />
+        </Datagrid>
+    </List>
 );
 
-const ScheduleForm = () => (
-  <SimpleForm>
-    <ReferenceInput source="doctorId" reference="doctors">
-      <SelectInput optionText="lastName" />
-    </ReferenceInput>
-    <SelectInput source="dayOfWeek" choices={weekDays} validate={required()} />
-    <TimeInput source="startTime" validate={required()} />
-    <TimeInput source="endTime" validate={required()} />
-    <DateInput source="validUntil" validate={required()} />
-  </SimpleForm>
+export const ScheduleForm = () => (
+    <SimpleForm>
+        <ReferenceInput source="doctor_id" reference="doctors" label="Doctor">
+            <SelectInput optionText={(record) => `${record.first_name} ${record.last_name}`} />
+        </ReferenceInput>
+        <SelectInput
+            source="day_of_week"
+            choices={weekDays}
+            label="Day of Week"
+            validate={required()}
+        />
+        <TimeInput source="start_time" label="Start Time" validate={required()} parse={(value)=> {
+            return value
+        }} />
+        <TimeInput source="end_time" label="End Time" validate={required()} parse={(value)=> {
+            return value
+        }} />
+        <DateInput source="valid_to" label="Valid Until" validate={required()} />
+    </SimpleForm>
 );
 
 export const ScheduleCreate = () => (
