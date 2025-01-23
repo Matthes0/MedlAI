@@ -1,5 +1,5 @@
 # Medyczne systemy informatyczne MedlAI
-AI consultation combined with booking in person appointments.
+AI consultation combined with booking in person appointments and admin panel for managing appointments.
 ## Structure of project directories
 - med-ai - AI module made using Python that provides backend services for AI consultation
 - my-react-app - Admin panel made using React Admin
