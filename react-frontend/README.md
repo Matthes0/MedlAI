@@ -1,5 +1,5 @@
 # MedlAI - Frontend
-AI teleconsultation combined with booking in person appointment.
+AI teleconsultation combined with booking in person appointments.
 
 ## Technology Stack
 - Typescript
