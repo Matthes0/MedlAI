@@ -13,7 +13,7 @@ interface ChatMessage {
   isTyping?: boolean;
 }
 
-const API_URL = "http://yuumi.skni.umcs.pl:8000";
+const API_URL = " http://212.182.25.252:8000";
 
 export const AIModule = () => {
   const [message, setMessage] = useState("");
