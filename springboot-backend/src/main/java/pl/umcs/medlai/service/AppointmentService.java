@@ -80,7 +80,7 @@ public class AppointmentService {
         LocalTime startTime = schedule.getStart_time();
         LocalTime endTime = schedule.getEnd_time();
         while (!(startTime.plusMinutes(30)).isAfter(endTime)) {
-            Optional<Appointment> existingAppointment = this.appointmentDAO.getByDate(date.atTime(startTime));
+            Optional<Appointment> existingAppointment = this.appointmentDAO.getByDateAndId(date.atTime(startTime), doctor.getId());
             if (existingAppointment.isEmpty() || existingAppointment.get().getStatus() == Status.CANCELLED) {
                 appointments.add(new AppointmentDTO(
                         id,

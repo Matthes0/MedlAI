@@ -18,7 +18,7 @@ public class AppointmentDAO {
     private EntityManager entityManager;
     private final String GET_ALL_JPQL = "FROM pl.umcs.medlai.model.Appointment";
     private final String GET_BY_ID_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.id = :id";
-    private final String GET_BY_DATE_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.start_date = :start_date AND b.status != 'CANCELLED'";
+    private final String GET_BY_DATE_JPQL= "SELECT b FROM pl.umcs.medlai.model.Appointment b WHERE b.start_date = :start_date AND b.status != 'CANCELLED' AND b.doctor.id = :doctor_id";
     public AppointmentDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -31,9 +31,10 @@ public class AppointmentDAO {
             return Optional.empty();
         }
     }
-    public Optional<Appointment> getByDate(LocalDateTime date){
+    public Optional<Appointment> getByDateAndId(LocalDateTime date, int id){
         TypedQuery<Appointment> query = entityManager.createQuery(GET_BY_DATE_JPQL,Appointment.class);
         query.setParameter("start_date", date);
+        query.setParameter("doctor_id", id);
         try {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
