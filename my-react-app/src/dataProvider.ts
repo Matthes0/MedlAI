@@ -108,7 +108,7 @@ export const dataProvider: DataProvider = {
     resource: string,
     params: DeleteParams<RecordType>
   ): Promise<DeleteResult<RecordType>> => {
-    const url = `${apiUrl}/admin/${resource}/${params.id}`;
+    const url = `${apiUrl}/${resource}/${params.id}`;
     await httpClient(url, {
       method: "DELETE",
     });

@@ -16,7 +16,6 @@ public class AbsenceDAO {
     private EntityManager entityManager;
 
     private final String GET_BY_ID_JPQL = "SELECT a FROM pl.umcs.medlai.model.Absence a WHERE a.id = :id";
-    private final String FIND_ALL_BY_DOCTOR_ID = "SELECT a FROM pl.umcs.medlai.model.Absence a WHERE a.doctor.id = :doctor_id";
     private final String FIND_ALL_JPQL = "SELECT a FROM pl.umcs.medlai.model.Absence a";
 
     public AbsenceDAO(EntityManager entityManager) {
