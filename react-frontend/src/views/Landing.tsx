@@ -39,7 +39,7 @@ export const Landing = () => {
               <div className="flex gap-4 mt-4">
                 <Button
                   variant="secondary"
-                  onClick={() => navigate("/admin")}
+                  onClick={() => (window.location.href = "http://localhost:5174")}
                   size="sm"
                   className="flex-1"
                 >
