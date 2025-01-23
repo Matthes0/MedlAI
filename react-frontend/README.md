@@ -1,5 +1,5 @@
 # MedlAI - Frontend
-AI teleconsultation combined with booking in person appointments.
+AI consultation combined with booking in person appointments.
 
 ## Technology Stack
 - Typescript
@@ -9,7 +9,7 @@ AI teleconsultation combined with booking in person appointments.
 - Tailwind
 
 ## AI
-User sends prompt to the server and receives an answer after a short while.
+User sends prompt to the server about his health problems and receives an answer after a short while.
 
 ## Booking appointment
 User first selects the doctor then chooses available date and hour of an appointment.
