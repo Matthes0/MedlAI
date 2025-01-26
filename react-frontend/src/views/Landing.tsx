@@ -39,7 +39,9 @@ export const Landing = () => {
               <div className="flex gap-4 mt-4">
                 <Button
                   variant="secondary"
-                  onClick={() => (window.location.href = "http://localhost:5174")}
+                  onClick={() =>
+                    (window.location.href = "http://10.50.50.123/:5174")
+                  }
                   size="sm"
                   className="flex-1"
                 >
