@@ -30,16 +30,15 @@ interface HttpClientResponse {
   json: any;
 }
 
-const apiUrl = "http://localhost:8080/admin";
+const apiUrl = "http://10.50.50.123:8080/admin";
 const httpClient = fetchUtils.fetchJson;
-
 
 export const dataProvider: DataProvider = {
   getList: async <RecordType extends RaRecord>(
     resource: string,
     params: GetListParams
   ): Promise<GetListResult<RecordType>> => {
-    const url = `http://localhost:8080/admin/${resource}/get`;
+    const url = `http://10.50.50.123:8080/admin/${resource}/get`;
     const { json } = await httpClient(url);
     return {
       data: json,
@@ -71,7 +70,7 @@ export const dataProvider: DataProvider = {
       const absenceData = params.data as unknown as Absence;
       url = `${apiUrl}/absences/`;
     }
-    console.log(params.data)
+    console.log(params.data);
     const { json } = await httpClient(url, {
       method: "POST",
       body: JSON.stringify(params.data),

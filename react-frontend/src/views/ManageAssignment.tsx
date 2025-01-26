@@ -17,7 +17,7 @@ export const ManageAssignment = () => {
     queryKey: ["appointment"],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:8080/api/appointment/getconfirmation?token=${token}`
+        `http://10.50.50.123:8080/api/appointment/getconfirmation?token=${token}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch appointment");
@@ -28,7 +28,7 @@ export const ManageAssignment = () => {
 
   const mutationConfirm = useMutation({
     mutationFn: (token: string) =>
-      fetch("http://localhost:8080/api/appointment/confirm", {
+      fetch("http://10.50.50.123:8080/api/appointment/confirm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const ManageAssignment = () => {
 
   const mutationCancel = useMutation({
     mutationFn: (token: string) =>
-      fetch("http://localhost:8080/api/appointment/cancel", {
+      fetch("http://10.50.50.123:8080/api/appointment/cancel", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -114,7 +114,7 @@ const AppointmentBooking: React.FC = () => {
   const queryDoctor = useQuery({
     queryKey: ["doctor"],
     queryFn: async () => {
-      const response = await fetch("http://localhost:8080/api/doctor/get");
+      const response = await fetch("http://10.50.50.123:8080/api/doctor/get");
       if (!response.ok) {
         throw new Error("Failed to fetch doctors");
       }
@@ -126,7 +126,7 @@ const AppointmentBooking: React.FC = () => {
     queryFn: async () => {
       if (!selectedDoctor || !selectedDate) return [];
       const response = await fetch(
-        `http://localhost:8080/api/appointment/get?doctorID=${
+        `http://10.50.50.123:8080/api/appointment/get?doctorID=${
           selectedDoctor.id
         }&date=${selectedDate.toLocaleDateString()}`
       );
@@ -153,7 +153,7 @@ const AppointmentBooking: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: (appointment: Appointment) =>
-      fetch("http://localhost:8080/api/appointment/add", {
+      fetch("http://10.50.50.123:8080/api/appointment/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Set the correct Content-Type
