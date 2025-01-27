@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Calendar } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -104,6 +104,7 @@ const AppointmentBooking: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
+  const [searchedDoctor, setSearchedDoctor] = useState<string>("");
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -135,7 +136,7 @@ const AppointmentBooking: React.FC = () => {
       }
       return response.json();
     },
-    enabled: selectedDoctor !== null && selectedDate !== null, // Only fetch if both doctor and date are selected
+    enabled: selectedDoctor !== null && selectedDate !== null,
   });
   const filteredAppointments =
     queryAppointment.data?.filter(
@@ -239,6 +240,15 @@ const AppointmentBooking: React.FC = () => {
       alert("Please complete all fields before confirming.");
     }
   });
+  const filteredDoctors = useMemo(() => {
+    return (
+      queryDoctor.data?.filter((item: Doctor) => {
+        const doctorName = item.name.replace(/^Dr\.\s*/i, "");
+        const searchTerm = searchedDoctor.replace(/^Dr\.\s*/i, "");
+        return doctorName.toLowerCase().includes(searchTerm.toLowerCase());
+      }) ?? []
+    );
+  }, [queryDoctor.data, searchedDoctor]);
 
   const renderStep = () => {
     switch (step) {
@@ -250,19 +260,22 @@ const AppointmentBooking: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Wyszukaj..."
+                  onChange={(val) => setSearchedDoctor(val.target.value)}
                   className="w-full px-4 py-2 rounded-md border border-gray-200 text-black"
                 />
               </div>
 
               <div>
-                {queryDoctor.data?.map((doctor: any) => (
+                {(filteredDoctors.length > 0
+                  ? filteredDoctors
+                  : queryDoctor.data
+                )?.map((doctor: Doctor) => (
                   <DoctorCard
                     key={doctor.id}
                     doctor={doctor}
                     isSelected={selectedDoctor?.id === doctor.id}
                     onSelect={() => {
                       setSelectedDoctor(doctor);
-                      //   setIsMobileMenuOpen(false);
                     }}
                   />
                 ))}
