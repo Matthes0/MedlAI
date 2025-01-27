@@ -51,7 +51,7 @@ public class AppointmentService {
         if (date.length() == 9) {
             formatter = DateTimeFormatter.ofPattern("yyyy-dd-M");
         } else {
-            formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
+            formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         }
         LocalDate receivedDate = LocalDate.parse(date, formatter);
         System.out.println(receivedDate);
