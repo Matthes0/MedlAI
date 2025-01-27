@@ -101,9 +101,12 @@ export const ManageAssignment = () => {
   const appointmentData = queryAppointment.data;
 
   return (
-    <div className="h-screen w-screen flex justify-center items-center bg-white">
+    <div className="h-screen w-screen flex justify-center items-center overflow-hidden">
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
+        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_100%_200px,#d5c5ff,transparent)]"></div>
+      </div>
       <main className="flex flex-col justify-center items-center w-full">
-        <div className="flex p-10 bg-[#F0EFFF] shadow-lg rounded-md">
+        <div className="flex p-10 bg-[#F0EFFF] shadow-lg rounded-md w-1/2">
           <div className="rounded-lg p-6 w-full max-h-fit flex flex-col justify-center">
             <div className="w-full max-w-2xl mx-auto p-5 bg-white rounded-lg shadow-sm text-black">
               <h2 className="text-xl font-semibold mb-4">Potwierdź wizytę</h2>
