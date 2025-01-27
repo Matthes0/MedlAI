@@ -122,34 +122,59 @@ const AppointmentBooking: React.FC = () => {
       return response.json();
     },
   });
+
+  const convertDateFormat = (date: Date): string => {
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${year}-${month}-${day}`;
+  };
   const queryAppointment = useQuery({
-    queryKey: ["appointment", selectedDoctor?.id, selectedDate],
+    queryKey: ["appointment", selectedDoctor?.id, selectedDate?.toISOString()], // Add dependencies to queryKey
     queryFn: async () => {
-      if (!selectedDoctor || !selectedDate) return [];
-      const response = await fetch(
-        `http://10.50.50.123:8080/api/appointment/get?doctorID=${
-          selectedDoctor.id
-        }&date=${convertDateFormat(selectedDate.toLocaleDateString())}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch appointments");
+      console.log("QueryFn executing with:", {
+        doctorId: selectedDoctor?.id,
+        date: selectedDate ? convertDateFormat(selectedDate) : null,
+      });
+
+      if (!selectedDoctor || !selectedDate) {
+        console.log("Early return due to missing data");
+        return [];
       }
-      return response.json();
+
+      try {
+        const url = `http://10.50.50.123:8080/api/appointment/get?doctorID=${
+          selectedDoctor.id
+        }&date=${convertDateFormat(selectedDate)}`;
+
+        console.log("Fetching from URL:", url);
+
+        const response = await fetch(url);
+        console.log("Response status:", response.status);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Response error:", errorText);
+          throw new Error(
+            `Failed to fetch appointments: ${response.status} - ${errorText}`
+          );
+        }
+
+        const data = await response.json();
+        console.log("Received data:", data);
+        return data;
+      } catch (error) {
+        console.error("Query error:", error);
+        throw error;
+      }
     },
     enabled: selectedDoctor !== null && selectedDate !== null,
   });
-  const filteredAppointments =
-    queryAppointment.data?.filter(
-      (appointment: any) => appointment.doctorID === selectedDoctor?.id
-    ) || [];
+  const filteredAppointments = queryAppointment.data || [];
 
   const handleTimeSelection = (time: string) => {
     setSelectedTime(selectedTime === time ? null : time);
-  };
-  const convertDateFormat = (dateString: string) => {
-    const [month, day, year] = dateString.split("/");
-
-    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   };
 
   const mutation = useMutation({
@@ -222,9 +247,7 @@ const AppointmentBooking: React.FC = () => {
       const appointment: Appointment = {
         doctor_id: selectedDoctor.id,
         start_date:
-          convertDateFormat(selectedDate.toLocaleDateString()) +
-          "T" +
-          selectedTime.toString(),
+          convertDateFormat(selectedDate) + "T" + selectedTime.toString(),
         patient_first_name: data.firstName,
         patient_last_name: data.lastName,
         patient_email: data.email,
