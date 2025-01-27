@@ -146,7 +146,7 @@ const AppointmentBooking: React.FC = () => {
     setSelectedTime(selectedTime === time ? null : time);
   };
   const convertDateFormat = (dateString: string) => {
-    const [day, month, year] = dateString.split("/");
+    const [month, day, year] = dateString.split("/");
 
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   };
