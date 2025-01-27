@@ -1,5 +1,6 @@
 package pl.umcs.medlai.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import pl.umcs.medlai.model.Status;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AppointmentBookedDTO {
     private Integer doctor_id;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime start_date;
     private String patient_first_name;
     private String patient_last_name;
