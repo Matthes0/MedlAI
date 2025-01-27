@@ -1,5 +1,6 @@
 package pl.umcs.medlai.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import pl.umcs.medlai.model.Status;
