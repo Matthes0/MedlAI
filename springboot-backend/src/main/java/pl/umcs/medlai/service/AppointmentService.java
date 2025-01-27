@@ -49,9 +49,9 @@ public class AppointmentService {
         Optional<Doctor> doctorOptional = doctorDAO.getById(doctorID);
         DateTimeFormatter formatter;
         if (date.length() == 9) {
-            formatter = DateTimeFormatter.ofPattern("d.MM.yyyy");
+            formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
         } else {
-            formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         }
         LocalDate receivedDate = LocalDate.parse(date, formatter);
         System.out.println(receivedDate);

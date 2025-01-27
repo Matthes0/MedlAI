@@ -128,7 +128,7 @@ const AppointmentBooking: React.FC = () => {
       const response = await fetch(
         `http://10.50.50.123:8080/api/appointment/get?doctorID=${
           selectedDoctor.id
-        }&date=${selectedDate.toLocaleDateString()}`
+        }&date=${convertDateFormat(selectedDate.toLocaleDateString())}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch appointments");
@@ -146,7 +146,7 @@ const AppointmentBooking: React.FC = () => {
     setSelectedTime(selectedTime === time ? null : time);
   };
   const convertDateFormat = (dateString: string) => {
-    const [day, month, year] = dateString.split(".");
+    const [day, month, year] = dateString.split("/");
 
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   };
